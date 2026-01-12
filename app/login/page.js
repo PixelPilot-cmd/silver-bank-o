@@ -64,7 +64,7 @@ export default function LoginPage() {
                         <div>
                             <div className="flex justify-between mb-2">
                                 <label className="text-sm text-gray-400">كلمة المرور</label>
-                                <Link href="/forgot-password" class="text-xs text-primary hover:underline">نسيت كلمة المرور؟</Link>
+                                <Link href="/forgot-password" className="text-xs text-primary hover:underline">نسيت كلمة المرور؟</Link>
                             </div>
                             <input
                                 type="password"

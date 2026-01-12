@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Trash2, ArrowRight } from 'lucide-react';
+import { Trash2, ArrowRight, Gem } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import OrderSearch from '@/components/OrderSearch';
@@ -13,11 +13,31 @@ export default function CartPage() {
     const [submitting, setSubmitting] = useState(false);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+    const [user, setUser] = useState(null);
+    const [usePoints, setUsePoints] = useState(false);
     const router = useRouter();
+
+    const DISCOUNT_THRESHOLD = 1000;
+    const DISCOUNT_VALUE = 50;
 
     useEffect(() => {
         const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
         setCart(savedCart);
+
+        // Load User and Points
+        const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
+        if (savedUser) {
+            fetch(`/api/auth/me?id=${savedUser.id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.error) {
+                        setUser(data);
+                        setName(data.name || '');
+                        setPhone(data.phone || '');
+                    }
+                });
+        }
+
         setLoading(false);
     }, []);
 
@@ -34,7 +54,9 @@ export default function CartPage() {
         window.dispatchEvent(new Event('cart-updated'));
     };
 
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const discount = (usePoints && user?.points >= DISCOUNT_THRESHOLD) ? DISCOUNT_VALUE : 0;
+    const total = Math.max(0, subtotal - discount);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -47,7 +69,12 @@ export default function CartPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     customer: { name, phone },
+                    customerEmail: user?.email,
+                    customerPhone: phone || user?.phone,
                     items: cart,
+                    subtotal,
+                    discountAmount: discount,
+                    usePoints,
                     total
                 })
             });
@@ -55,7 +82,7 @@ export default function CartPage() {
             if (res.ok) {
                 const order = await res.json();
 
-                // Track this order for notifications
+                // Track this order
                 const myOrders = JSON.parse(localStorage.getItem('my_orders') || '[]');
                 if (!myOrders.includes(order.id)) {
                     myOrders.push(order.id);
@@ -138,10 +165,48 @@ export default function CartPage() {
                 {/* Checkout Summary */}
                 <div className="h-fit">
                     <div className="bg-[#111] p-6 rounded-3xl border border-white/10 sticky top-4 shadow-2xl">
-                        <div className="flex justify-between mb-6 pb-6 border-b border-white/5 font-serif text-xl">
-                            <span className="text-gray-400">الإجمالي:</span>
-                            <span className="text-white font-bold">{total} ₪</span>
+                        <div className="space-y-4 mb-6 pb-6 border-b border-white/5 font-serif">
+                            <div className="flex justify-between text-base">
+                                <span className="text-gray-500">المجموع الفرعي:</span>
+                                <span className="text-white">{subtotal} ₪</span>
+                            </div>
+
+                            {discount > 0 && (
+                                <div className="flex justify-between text-base text-primary">
+                                    <span>خصم النقاط:</span>
+                                    <span>-{discount} ₪</span>
+                                </div>
+                            )}
+
+                            <div className="flex justify-between text-xl pt-2">
+                                <span className="text-gray-400">الإجمالي:</span>
+                                <span className="text-white font-bold">{total} ₪</span>
+                            </div>
                         </div>
+
+                        {/* Loyalty Points Redemption (Optional) */}
+                        {user && user.points >= DISCOUNT_THRESHOLD && (
+                            <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-2xl animate-in fade-in zoom-in duration-500">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
+                                            <Gem size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-white font-bold">لديك {user.points} نقطة</p>
+                                            <p className="text-[10px] text-gray-500">استبدل 1000 نقطة بخصم 50 ₪</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setUsePoints(!usePoints)}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${usePoints ? 'bg-primary text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20'}`}
+                                    >
+                                        {usePoints ? 'تم التفعيل' : 'تفعيل الخصم'}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div className="space-y-1">

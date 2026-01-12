@@ -4,15 +4,17 @@ import { useState, useEffect } from 'react';
 
 export default function Preloader() {
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const timer = setTimeout(() => {
             setLoading(false);
         }, 1500);
         return () => clearTimeout(timer);
     }, []);
 
-    if (!loading) return null;
+    if (!mounted || !loading) return null;
 
     return (
         <div className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center animate-fade-out duration-500 delay-1000 fill-mode-forwards">

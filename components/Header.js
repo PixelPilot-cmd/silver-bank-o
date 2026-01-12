@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Search, User, LogOut, Store, Truck } from 'lucide-react';
+import { Search, ShoppingBag, User, LogOut, Store, Truck, Gem, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import NotificationBell from './NotificationBell';
 
@@ -87,44 +87,62 @@ export default function Header() {
                 </form>
 
                 {/* Actions */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1 sm:gap-3">
                     {user ? (
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold hidden sm:block">مرحباً، {user.name}</span>
-                            <button onClick={handleLogout} className="p-2 hover:bg-red-500/10 rounded-full text-red-500 transition-colors" title="تسجيل خروج">
-                                <LogOut size={20} />
+                        <div className="flex items-center gap-1 sm:gap-3">
+                            <Link href="/profile" className="flex flex-col items-end leading-tight hover:text-primary transition-all cursor-pointer">
+                                <span className="text-[10px] sm:text-sm font-bold truncate max-w-[80px] sm:max-w-none">
+                                    {user.name}
+                                </span>
+                                {user.points > 0 ? (
+                                    <span className="text-[9px] sm:text-[10px] text-primary flex items-center gap-0.5">
+                                        <Gem size={8} className="sm:w-2.5" />
+                                        {user.points} <span className="hidden xs:inline">نقطة</span>
+                                    </span>
+                                ) : (
+                                    <span className="text-[9px] text-gray-500">حساب فضي</span>
+                                )}
+                            </Link>
+                            <button onClick={handleLogout} className="p-1.5 sm:p-2 hover:bg-red-500/10 rounded-full text-red-500 transition-colors" title="تسجيل خروج">
+                                <LogOut size={18} className="sm:w-5" />
                             </button>
                         </div>
                     ) : (
-                        <Link href="/login" className="flex items-center gap-2 text-sm font-bold hover:text-primary transition-colors">
-                            <User size={20} />
-                            <span className="hidden sm:block">دخول / تسجيل</span>
+                        <Link href="/login" className="px-4 sm:px-6 py-2 bg-white text-black text-xs sm:text-sm font-bold rounded-full hover:bg-primary hover:text-white transition-all">
+                            دخول
                         </Link>
                     )}
 
-                    {/* Shop Page Link */}
-                    <Link href="/shop" className="p-2 hover:bg-white/10 rounded-full transition-colors" title="المعرض">
+                    {/* Admin Quick Access */}
+                    <Link href="/admin/login" className="p-2 text-gray-500 hover:text-primary transition-colors" title="لوحة التحكم">
+                        <Lock size={18} className="sm:w-5" />
+                    </Link>
+
+                    {/* Desktop/Tablet Store Link */}
+                    <Link href="/shop" className="hidden sm:flex p-2 hover:bg-white/10 rounded-full transition-colors" title="المعرض">
                         <Store size={22} />
                     </Link>
 
-                    {/* Tracking Page Link */}
+                    {/* Notification/Notifications */}
                     <NotificationBell />
 
+                    {/* Tracking Link */}
                     <Link href="/track" className="p-2 hover:bg-white/10 rounded-full transition-colors" title="تتبع الطلب">
                         <Truck size={22} />
                     </Link>
 
+                    {/* Cart Link */}
                     <Link href="/cart" className="relative p-2 hover:bg-white/10 rounded-full transition-colors" title="سلة المشتريات">
-                        <ShoppingBag size={24} />
+                        <ShoppingBag size={22} className="md:w-6 md:h-6" />
                         {cartCount > 0 && (
-                            <span className="absolute top-0 right-0 w-5 h-5 bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-black animate-in zoom-in duration-300">
+                            <span className="absolute top-1 right-1 w-4 h-4 sm:w-5 sm:h-5 bg-primary text-white text-[9px] sm:text-[10px] font-bold rounded-full flex items-center justify-center border border-black animate-in zoom-in duration-300">
                                 {cartCount}
                             </span>
                         )}
                     </Link>
 
-                    {/* Admin Link (Subtle) */}
-                    <Link href="/admin" className="text-xs text-gray-500 hover:text-white px-2 border-r border-white/10 mr-2">
+                    {/* Admin Link (More hidden on small screens) */}
+                    <Link href="/admin" className="hidden xs:block text-[10px] text-gray-500 hover:text-white px-2 border-r border-white/10 ml-1">
                         Admin
                     </Link>
                 </div>

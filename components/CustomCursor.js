@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 
 export default function CustomCursor() {
+    const [mounted, setMounted] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [hidden, setHidden] = useState(false);
     const [hovering, setHovering] = useState(false);
     const [mouseDown, setMouseDown] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const addEventListeners = () => {
             document.addEventListener("mousemove", onMouseMove);
             document.addEventListener("mouseenter", onMouseEnter);
@@ -60,6 +62,8 @@ export default function CustomCursor() {
             observer.disconnect();
         };
     }, []);
+
+    if (!mounted) return null;
 
     // Don't render on mobile touches to avoid double cursor
     if (typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

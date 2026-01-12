@@ -15,7 +15,7 @@ export default function Home() {
                 <div className="relative z-20 flex flex-col items-center max-w-4xl w-full">
                     <LuxuryClock />
                     <div className="text-center mt-12 animate-fade-in transition-all duration-1000">
-                        <h1 className="text-6xl md:text-9xl font-black mb-6 title-gradient tracking-tighter drop-shadow-2xl">بنك الفضة 3</h1>
+                        <h1 className="text-6xl md:text-9xl font-black mb-6 title-gradient tracking-tighter drop-shadow-2xl">Silver Bank 3</h1>
                         <p className="text-gray-400 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mb-2">Luxury . Time . Elegance</p>
                     </div>
                 </div>

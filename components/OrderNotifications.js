@@ -30,7 +30,7 @@ export default function OrderNotifications() {
                             let message = '';
                             if (order.status === 'preparing') message = `بدأنا في تجهيز طلبك الفاخر #${order.orderNumber}`;
                             if (order.status === 'ready') message = `طلبك #${order.orderNumber} أصبح جاهزاً للاستلام!`;
-                            if (order.status === 'completed') message = `تم تسليم طلبكم #${order.orderNumber}. نأمل أن تنال القطعة إعجابكم.`;
+                            if (order.status === 'completed' || order.status === 'delivered') message = `تم تسليم طلبكم #${order.orderNumber}. نأمل أن تنال القطعة إعجابكم.`;
 
                             if (message) {
                                 const newNotif = {
@@ -48,6 +48,10 @@ export default function OrderNotifications() {
                         }
 
                         lastStatuses[id] = order.status;
+                    } else if (res.status === 404) {
+                        // Clean up non-existent orders from local storage to stop 404 noise
+                        const updatedOrderIds = myOrderIds.filter(orderId => orderId !== id);
+                        localStorage.setItem('my_orders', JSON.stringify(updatedOrderIds));
                     }
                 } catch (err) {
                     console.error("Notification check error:", err);

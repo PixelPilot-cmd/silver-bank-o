@@ -62,6 +62,7 @@ export default function Footer() {
                             <FooterLink href="/cart" label="سلة المشتريات" />
                             <FooterLink href="/login" label="حسابي" />
                             <FooterLink href="/track" label="تتبع الطلب" />
+                            <FooterLink href="/admin/login" label="لوحة التحكم" />
                         </ul>
                     </div>
 

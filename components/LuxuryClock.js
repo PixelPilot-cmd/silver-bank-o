@@ -30,7 +30,7 @@ export default function LuxuryClock() {
     }, [mounted]);
 
     return (
-        <div className="perspective-[1000px] flex justify-center items-center py-10">
+        <div className="perspective-[1000px] flex justify-center items-center py-4 md:py-10 min-h-[300px] md:min-h-[450px]">
             <div
                 className={`relative transition-all duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)] transform-style-3d ${mounted
                     ? 'scale-100 opacity-100'
@@ -43,7 +43,7 @@ export default function LuxuryClock() {
                 }}
             >
                 {/* Watch Case */}
-                <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full p-[2px] bg-gradient-to-br from-[#ffffff] via-[#d4d4d4] to-[#888888] shadow-[0_0_80px_rgba(255,255,255,0.05)] animate-float-slow">
+                <div className="relative w-64 h-64 md:w-96 md:h-96 rounded-full p-[2px] bg-gradient-to-br from-[#ffffff] via-[#d4d4d4] to-[#888888] shadow-[0_0_80px_rgba(255,255,255,0.05)] animate-float-slow">
 
                     {/* Bezel */}
                     <div className="absolute inset-0 rounded-full border-[16px] border-[#e0e0e0] shadow-[inset_0_4px_10px_rgba(0,0,0,0.5),0_10px_30px_rgba(0,0,0,0.5)] bg-[#111]"></div>
@@ -55,15 +55,25 @@ export default function LuxuryClock() {
                         {[...Array(60)].map((_, i) => (
                             <div
                                 key={i}
-                                className={`absolute top-4 left-1/2 -translate-x-1/2 w-[1px] ${i % 5 === 0 ? 'h-3 bg-[#e0e0e0]/80' : 'h-1.5 bg-[#555]'}`}
-                                style={{ transform: `rotate(${i * 6}deg)`, transformOrigin: '0 156px' }}
-                            ></div>
+                                className={`absolute top-0 left-1/2 -translate-x-1/2 w-[1px] ${i % 5 === 0 ? 'h-[15px] md:h-[25px] bg-[#e0e0e0]/80' : 'h-[5px] md:h-[10px] bg-[#555]'}`}
+                                style={{
+                                    transform: `rotate(${i * 6}deg)`,
+                                    transformOrigin: '50% 108px', // Mobile radius
+                                    '--desktop-origin': '50% 172px'
+                                }}
+                            >
+                                <style jsx>{`
+                                    @media (min-width: 768px) {
+                                        div { transform-origin: var(--desktop-origin) !important; }
+                                    }
+                                `}</style>
+                            </div>
                         ))}
 
                         {/* Branding */}
                         <div className="absolute top-[28%] text-center z-0">
-                            <span className="block text-white/90 text-sm font-bold tracking-[0.3em] font-serif">SILVER BANK</span>
-                            <span className="block text-primary/80 text-[10px] tracking-widest mt-1 uppercase">Automatic</span>
+                            <span className="block text-white/90 text-[10px] md:text-sm font-bold tracking-[0.3em] font-serif">SILVER BANK</span>
+                            <span className="block text-primary/80 text-[8px] md:text-[10px] tracking-widest mt-1 uppercase">Automatic</span>
                         </div>
 
                         {/* Hands Container - Centered */}
@@ -74,7 +84,7 @@ export default function LuxuryClock() {
                         )}
 
                         {/* Center Cap */}
-                        <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-[#e0e0e0] border-2 border-gray-500 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg z-50"></div>
+                        <div className="absolute top-1/2 left-1/2 w-3 h-3 md:w-4 md:h-4 bg-[#e0e0e0] border-2 border-gray-500 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg z-50"></div>
 
                         {/* Glass Reflection */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent rounded-full z-40 pointer-events-none"></div>
@@ -112,16 +122,16 @@ function RealtimeHands({ initialTime }) {
         <>
             {/* Hour */}
             <div className="absolute top-0 left-0 w-0 h-0 flex justify-center transition-transform duration-1000 ease-linear" style={style.h}>
-                <div className="absolute bottom-0 -translate-x-1/2 w-3 h-24 bg-gradient-to-t from-[#fff] to-[#d0d0d0] rounded-full shadow-2xl origin-bottom"></div>
+                <div className="absolute bottom-0 -translate-x-1/2 w-2 md:w-3 h-16 md:h-24 bg-gradient-to-t from-[#fff] to-[#d0d0d0] rounded-full shadow-2xl origin-bottom"></div>
             </div>
             {/* Minute */}
             <div className="absolute top-0 left-0 w-0 h-0 flex justify-center transition-transform duration-1000 ease-linear" style={style.m}>
-                <div className="absolute bottom-0 -translate-x-1/2 w-2 h-32 bg-gradient-to-t from-[#fff] to-[#d0d0d0] rounded-full shadow-2xl origin-bottom"></div>
+                <div className="absolute bottom-0 -translate-x-1/2 w-1.5 md:w-2 h-24 md:h-32 bg-gradient-to-t from-[#fff] to-[#d0d0d0] rounded-full shadow-2xl origin-bottom"></div>
             </div>
             {/* Second */}
             <div className="absolute top-0 left-0 w-0 h-0 flex justify-center transition-transform duration-75 ease-out" style={style.s}>
-                <div className="absolute bottom-[-15px] -translate-x-1/2 w-0.5 h-40 bg-[#D70000] rounded-full shadow-[0_0_10px_rgba(215,0,0,0.5)] origin-bottom">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-4 bg-white rounded-full"></div>
+                <div className="absolute bottom-[-15px] -translate-x-1/2 w-0.5 md:w-0.5 h-30 md:h-40 bg-[#D70000] rounded-full shadow-[0_0_10px_rgba(215,0,0,0.5)] origin-bottom">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-3 md:h-4 bg-white rounded-full"></div>
                 </div>
             </div>
         </>
