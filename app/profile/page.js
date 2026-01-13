@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { User, Gem, ShoppingBag, Package, Star, ArrowLeft, Sparkles, Check, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
+    const router = useRouter();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [customRequests, setCustomRequests] = useState([]);
@@ -62,6 +64,7 @@ export default function ProfilePage() {
             if (res.ok) {
                 const result = await res.json();
                 setSuccessOrder(result.order);
+                router.refresh(); // Refresh background data
             }
         } catch (err) {
             console.error(err);
@@ -102,7 +105,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-4 w-full max-w-xs">
                     <p className="text-gray-400 text-sm mb-4">يرجى مراجعة الاوردر من خلال تتبع الطلبات باستخدام رقم الاوردر</p>
                     <button
-                        onClick={() => window.location.href = `/track/${successOrder.id}`}
+                        onClick={() => router.push(`/track/${successOrder.id}`)}
                         className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95"
                     >
                         تتبع التحفة الفنية
@@ -321,7 +324,7 @@ export default function ProfilePage() {
                         <button
                             onClick={() => {
                                 localStorage.removeItem('customer_user');
-                                window.location.href = '/';
+                                router.push('/');
                             }}
                             className="text-gray-600 hover:text-red-500 text-xs uppercase tracking-widest transition-colors"
                         >

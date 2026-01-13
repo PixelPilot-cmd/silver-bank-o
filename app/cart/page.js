@@ -141,7 +141,7 @@ export default function CartPage() {
 
                 <div className="flex flex-col gap-4 w-full max-w-xs">
                     <button
-                        onClick={() => window.location.href = `/track/${successOrder.id}`}
+                        onClick={() => router.push(`/track/${successOrder.id}`)}
                         className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95"
                     >
                         {t('cart.trackStatus')}

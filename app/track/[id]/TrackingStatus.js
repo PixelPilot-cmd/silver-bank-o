@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import { MapPin, Truck, ChevronLeft, Map, Navigation } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 export default function TrackingStatus({ order }) {
+    const router = useRouter();
     const [method, setMethod] = useState(null); // 'pickup' | 'delivery'
     const [address, setAddress] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -78,7 +81,7 @@ export default function TrackingStatus({ order }) {
                 })
             });
             if (res.ok) {
-                window.location.reload();
+                router.refresh();
             }
         } catch (e) {
             console.error(e);
