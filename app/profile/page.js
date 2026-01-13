@@ -22,12 +22,20 @@ export default function ProfilePage() {
                     if (!data.error) setUser(data);
                 });
 
-            // Fetch Custom Requests
-            fetch('/api/custom-requests')
+            // Fetch Custom Requests with cache disabling
+            fetch('/api/custom-requests', { cache: 'no-store' })
                 .then(res => res.json())
                 .then(data => {
-                    const myRequests = data.filter(r => r.userId === savedUser.id);
+                    // Filter by userId OR phone number to ensure it appears on all devices
+                    const myRequests = data.filter(r =>
+                        (r.userId && r.userId === savedUser.id) ||
+                        (r.customerPhone && (r.customerPhone === savedUser.phone || r.customerPhone === user?.phone))
+                    );
                     setCustomRequests(myRequests);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.error('Error fetching requests:', err);
                     setLoading(false);
                 });
         } else {
@@ -205,17 +213,30 @@ export default function ProfilePage() {
                                 <Sparkles size={24} className="text-primary" />
                                 طلبات التفصيل الخاصة
                             </h2>
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 {customRequests.map((req) => (
-                                    <div key={req.id} className="bg-[#111] border border-white/10 rounded-3xl p-6 flex flex-col md:flex-row gap-6 hover:bg-[#151515] transition-colors group">
+                                    <div key={req.id} className="bg-secondary-light border border-white/10 rounded-[2rem] p-5 md:p-8 flex flex-col md:flex-row gap-6 hover:border-primary/30 transition-all group overflow-hidden relative">
+                                        {/* Status Tag for Mobile - Absolute Positioned */}
+                                        <div className="absolute top-4 left-4 z-20 md:hidden">
+                                            <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md shadow-xl ${req.status === 'priced' ? 'bg-blue-500/80 text-white' :
+                                                req.status === 'approved' ? 'bg-green-500/80 text-white' :
+                                                    'bg-white/10 text-gray-400'
+                                                }`}>
+                                                {req.status === 'pending' ? 'بانتظار التسعير' :
+                                                    req.status === 'priced' ? 'تم التسعير' :
+                                                        req.status === 'approved' ? 'تمت الموافقة' : req.status}
+                                            </span>
+                                        </div>
+
                                         {req.image && (
-                                            <div className="w-full md:w-32 h-40 md:h-32 bg-black rounded-2xl overflow-hidden shrink-0 border border-white/5 group-hover:border-primary/30 transition-colors">
+                                            <div className="w-full md:w-32 h-48 md:h-32 bg-black rounded-2xl overflow-hidden shrink-0 border border-white/5 group-hover:border-primary/30 transition-colors">
                                                 <img src={req.image} alt="Custom" className="w-full h-full object-cover" />
                                             </div>
                                         )}
-                                        <div className="flex-1">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${req.status === 'priced' ? 'bg-blue-500/20 text-blue-400' :
+
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center justify-between mb-4 mt-2 md:mt-0">
+                                                <span className={`hidden md:inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${req.status === 'priced' ? 'bg-blue-500/20 text-blue-400' :
                                                     req.status === 'approved' ? 'bg-green-500/20 text-green-400' :
                                                         'bg-white/5 text-gray-500'
                                                     }`}>
@@ -223,8 +244,12 @@ export default function ProfilePage() {
                                                         req.status === 'priced' ? 'تم التسعير' :
                                                             req.status === 'approved' ? 'تمت الموافقة' : req.status}
                                                 </span>
-                                                <span className="text-[10px] text-gray-600 font-mono">{new Date(req.createdAt).toLocaleDateString('ar-EG')}</span>
+                                                <span className="text-[10px] text-gray-600 font-mono flex items-center gap-1">
+                                                    <Clock size={10} />
+                                                    {new Date(req.createdAt).toLocaleDateString('ar-EG')}
+                                                </span>
                                             </div>
+
                                             <p className="text-gray-300 text-sm mb-4 font-light whitespace-pre-wrap leading-relaxed bg-white/5 p-4 rounded-2xl border border-white/5">
                                                 <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">تفاصيل طلبك:</span>
                                                 {req.description}
