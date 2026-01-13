@@ -76,9 +76,16 @@ export default function AdminOrderCard({ order }) {
 
             <div className="space-y-1 mb-4 text-sm text-gray-300 border-t border-white/5 pt-3">
                 {order.items.map((item, i) => (
-                    <div key={i} className="flex justify-between">
-                        <span>{item.name} (x{item.quantity})</span>
-                        <span>{item.price * item.quantity} ₪</span>
+                    <div key={i} className="flex flex-col gap-1 border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                        <div className="flex justify-between items-start">
+                            <span className="flex-1 pr-2">{item.name} (x{item.quantity})</span>
+                            <span className="font-bold">{item.price * item.quantity} ₪</span>
+                        </div>
+                        {item.isCustom && (
+                            <div className="bg-black/20 p-2 rounded-lg text-[11px] text-gray-400 italic">
+                                ملاحظة: هذا طلب تفصيل خاص من الزبون.
+                            </div>
+                        )}
                     </div>
                 ))}
                 <div className="flex justify-between font-bold text-white pt-2 border-t border-white/5 mt-2">

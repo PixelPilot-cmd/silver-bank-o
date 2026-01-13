@@ -31,12 +31,14 @@ export default function ProfilePage() {
                 return fetch('/api/custom-requests', { cache: 'no-store' })
                     .then(res => res.json())
                     .then(requestsData => {
-                        const userPhone = userData?.phone || savedUser.phone;
+                        const normalize = (p) => p ? p.toString().replace(/[^0-9]/g, '') : null;
+                        const userPhone = normalize(userData?.phone || savedUser.phone);
 
-                        const myRequests = requestsData.filter(r =>
-                            (r.userId && r.userId === savedUser.id) ||
-                            (r.customerPhone && userPhone && r.customerPhone === userPhone)
-                        );
+                        const myRequests = requestsData.filter(r => {
+                            const reqPhone = normalize(r.customerPhone);
+                            return (r.userId && r.userId === savedUser.id) ||
+                                (reqPhone && userPhone && reqPhone === userPhone);
+                        });
 
                         setCustomRequests(myRequests);
                         setLoading(false);
@@ -212,12 +214,20 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Custom Requests Section */}
-                    {customRequests.length > 0 && (
-                        <div className="mb-12 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
-                            <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
-                                <Sparkles size={24} className="text-primary" />
-                                طلبات التفصيل الخاصة
-                            </h2>
+                    <div className="mb-12 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
+                        <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
+                            <Sparkles size={24} className="text-primary" />
+                            طلبات التفصيل الخاصة
+                        </h2>
+
+                        {customRequests.length === 0 ? (
+                            <div className="bg-white/5 border border-dashed border-white/10 rounded-[2rem] p-12 text-center">
+                                <p className="text-gray-500 font-light">لا توجد طلبات تفصيل خاصة بك حالياً.</p>
+                                <Link href="/custom-design" className="text-primary text-sm mt-4 inline-block hover:underline">
+                                    اطلب تصميمك الخاص الآن
+                                </Link>
+                            </div>
+                        ) : (
                             <div className="space-y-6">
                                 {customRequests.map((req) => (
                                     <div key={req.id} className="bg-secondary-light border border-white/10 rounded-[2rem] p-5 md:p-8 flex flex-col md:flex-row gap-6 hover:border-primary/30 transition-all group overflow-hidden relative">
@@ -260,34 +270,39 @@ export default function ProfilePage() {
                                                 {req.description}
                                             </p>
 
-                                            {req.status === 'priced' && (
+                                            {(req.status === 'priced' || req.status === 'approved') && (
                                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-white/5 pt-4 mt-auto">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">السعر المقترح</span>
+                                                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">
+                                                            {req.status === 'approved' ? 'السعر المتفق عليه' : 'السعر المقترح'}
+                                                        </span>
                                                         <span className="text-3xl font-black text-primary">{req.price} ₪</span>
                                                     </div>
-                                                    <button
-                                                        onClick={() => handleApprove(req.id)}
-                                                        disabled={approvingId === req.id}
-                                                        className="w-full sm:w-auto bg-white text-black px-8 py-4 rounded-2xl text-sm font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl active:scale-95"
-                                                    >
-                                                        {approvingId === req.id ? (
-                                                            <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
-                                                        ) : (
-                                                            <>
-                                                                <Check size={18} />
-                                                                موافقة وتأكيد الطلب
-                                                            </>
-                                                        )}
-                                                    </button>
+
+                                                    {req.status === 'priced' && (
+                                                        <button
+                                                            onClick={() => handleApprove(req.id)}
+                                                            disabled={approvingId === req.id}
+                                                            className="w-full sm:w-auto bg-white text-black px-8 py-4 rounded-2xl text-sm font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl active:scale-95"
+                                                        >
+                                                            {approvingId === req.id ? (
+                                                                <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                                                            ) : (
+                                                                <>
+                                                                    <Check size={18} />
+                                                                    موافقة وتأكيد الطلب
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
                     {/* Quick Links */}
                     <div className="flex flex-wrap justify-center gap-4">
