@@ -101,22 +101,28 @@ export default function CustomDesignPage() {
             <main className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center">
                 <div className="mb-8">
                     <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto">
-                        <Sparkles size={40} className="text-white" />
+                        <span className="text-4xl">✨</span>
                     </div>
                 </div>
 
-                <h1 className="text-3xl font-bold text-white mb-4">تم إرسال طلبك</h1>
+                <h1 className="text-3xl font-bold text-white mb-4">تم إرسال طلبك بنجاح</h1>
                 <p className="text-gray-400 max-w-sm mx-auto mb-10">
-                    شكراً لك. تم استلام طلب التفصيل الخاص بك بنجاح. يمكنك متابعة حالة الطلب من صفحة حسابك.
+                    شكراً لك. تم استلام طلب التفصيل الخاص بك. يمكنك متابعة حالة الطلب من صفحة حسابك الشخصي.
                 </p>
 
                 <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
-                    <Link href="/profile" className="w-full py-4 bg-white text-black font-bold rounded-xl">
+                    <button
+                        onClick={() => router.push('/profile')}
+                        className="w-full py-4 bg-white text-black font-bold rounded-xl active:scale-95 transition-transform"
+                    >
                         الذهاب إلى حسابي
-                    </Link>
-                    <Link href="/" className="w-full py-3 text-gray-500 text-sm">
+                    </button>
+                    <button
+                        onClick={() => router.push('/')}
+                        className="w-full py-3 text-gray-500 text-sm hover:text-white"
+                    >
                         العودة للرئيسية
-                    </Link>
+                    </button>
                 </div>
             </main>
         );
