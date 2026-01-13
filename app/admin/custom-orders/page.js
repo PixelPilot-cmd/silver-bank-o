@@ -27,6 +27,13 @@ export default function AdminCustomOrders() {
         fetchRequests();
     };
 
+    const deleteRequest = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا الطلب؟ لا يمكن التراجع عن هذه الخطوة.')) return;
+
+        await fetch(`/api/custom-requests/${id}`, { method: 'DELETE' });
+        fetchRequests();
+    };
+
     const setPrice = async (id) => {
         const price = prompt('أدخل السعر المقترح لهذه القطعة (شيكل):');
         if (price) {
@@ -69,9 +76,9 @@ export default function AdminCustomOrders() {
                         <div className="p-6 space-y-4 flex-1">
                             <div className="flex items-center justify-between">
                                 <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${req.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
-                                        req.status === 'priced' ? 'bg-blue-500/20 text-blue-500' :
-                                            req.status === 'approved' ? 'bg-green-500/20 text-green-500' :
-                                                'bg-white/10 text-gray-400'
+                                    req.status === 'priced' ? 'bg-blue-500/20 text-blue-500' :
+                                        req.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                                            'bg-white/10 text-gray-400'
                                     }`}>
                                     {req.status === 'pending' ? 'بانتظار التسعير' :
                                         req.status === 'priced' ? 'تم التسعير' :
@@ -108,13 +115,22 @@ export default function AdminCustomOrders() {
                                 <DollarSign size={14} />
                                 وضع السعر
                             </button>
-                            <button
-                                onClick={() => updateStatus(req.id, 'completed')}
-                                className="flex items-center justify-center gap-2 p-3 bg-green-600 hover:bg-green-700 rounded-xl text-white text-xs font-bold transition-colors"
-                            >
-                                <CheckCircle2 size={14} />
-                                تم الإنجاز
-                            </button>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => updateStatus(req.id, 'completed')}
+                                    className="flex-1 flex items-center justify-center gap-2 p-3 bg-green-600 hover:bg-green-700 rounded-xl text-white text-xs font-bold transition-colors"
+                                >
+                                    <CheckCircle2 size={14} />
+                                    تم
+                                </button>
+                                <button
+                                    onClick={() => deleteRequest(req.id)}
+                                    className="p-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 rounded-xl transition-all"
+                                    title="حذف الطلب"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}
