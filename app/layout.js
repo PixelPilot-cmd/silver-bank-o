@@ -1,4 +1,5 @@
 import './globals.css';
+import ClientProviders from '@/components/ClientProviders';
 
 export const metadata = {
     title: 'Silver Bank 3 | بنك الفضة',
@@ -21,17 +22,18 @@ export default function RootLayout({ children }) {
                 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
             </head>
             <body className="cursor-none relative overflow-x-hidden bg-black text-white">
-                <Preloader />
-                <CustomCursor />
+                <ClientProviders>
+                    <Preloader />
+                    <CustomCursor />
 
+                    <BackgroundMarquee />
 
-                <BackgroundMarquee />
+                    <main className="relative z-10 min-h-screen">
+                        {children}
+                    </main>
 
-                <main className="relative z-10 min-h-screen">
-                    {children}
-                </main>
-
-                <Footer />
+                    <Footer />
+                </ClientProviders>
             </body>
         </html>
     );

@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import { MapPin, Phone, Facebook, Package, ShieldCheck, Gem } from 'lucide-react';
 
+import { useLanguage } from '@/contexts/LanguageContext';
+
 export default function Footer() {
+    const { t } = useLanguage();
     return (
         <footer className="bg-black/90 text-white border-t border-white/10 mt-48 relative overflow-hidden backdrop-blur-lg">
 
@@ -20,10 +23,10 @@ export default function Footer() {
                             <div className="w-10 h-10 bg-gradient-to-tr from-primary to-black rounded-full flex items-center justify-center font-bold text-xl text-white border border-white/20">
                                 3
                             </div>
-                            <span className="text-2xl font-bold font-serif tracking-wide">بنك الفضة</span>
+                            <span className="text-2xl font-bold font-serif tracking-wide">{t('siteName')}</span>
                         </div>
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
-                            نقدم أرقى المشغولات الفضية والساعات الفاخرة. لسنا مجرد متجر، نحن بوابة للأناقة الخالدة.
+                            {t('footer.desc')}
                         </p>
                         <div className="flex justify-center gap-4 mt-6">
                             <SocialIcon icon={<Facebook size={18} />} href="https://www.facebook.com/share/187bc83Cyd/?mibextid=wwXIfr" target="_blank" />
@@ -41,11 +44,11 @@ export default function Footer() {
 
                     {/* Contact Info (Requested) */}
                     <div className="space-y-4 flex flex-col items-center">
-                        <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2 inline-block">تواصل معنا</h3>
+                        <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2 inline-block">{t('footer.contactUs')}</h3>
                         <ul className="space-y-4 text-sm text-gray-300">
                             <li className="flex flex-col items-center justify-center gap-2 hover:text-primary transition-colors cursor-pointer">
                                 <MapPin className="w-5 h-5 text-primary shrink-0" />
-                                <span>فلسطين - رام الله<br />دوار الساعة - عمارة برج الساعة</span>
+                                <span className="whitespace-pre-line">{t('footer.address')}</span>
                             </li>
                             <li className="flex items-center justify-center gap-3 hover:text-primary transition-colors cursor-pointer">
                                 <Phone className="w-5 h-5 text-primary shrink-0" />
@@ -56,41 +59,41 @@ export default function Footer() {
 
                     {/* Quick Links */}
                     <div className="space-y-4 flex flex-col items-center">
-                        <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2 inline-block">روابط سريعة</h3>
+                        <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2 inline-block">{t('footer.quickLinks')}</h3>
                         <ul className="space-y-2 text-sm text-gray-400">
-                            <FooterLink href="/" label="الرئيسية" />
-                            <FooterLink href="/cart" label="سلة المشتريات" />
-                            <FooterLink href="/login" label="حسابي" />
-                            <FooterLink href="/track" label="تتبع الطلب" />
-                            <FooterLink href="/admin/login" label="لوحة التحكم" />
+                            <FooterLink href="/" label={t('home')} />
+                            <FooterLink href="/cart" label={t('cart')} />
+                            <FooterLink href="/login" label={t('myAccount')} />
+                            <FooterLink href="/track" label={t('trackOrder')} />
+                            <FooterLink href="/admin/login" label={t('admin')} />
                         </ul>
                     </div>
 
                     {/* Features */}
                     <div className="space-y-4 flex flex-col items-center">
-                        <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2 inline-block">لماذا بنك الفضة؟</h3>
+                        <h3 className="text-lg font-bold text-white border-b border-white/10 pb-2 inline-block">{t('footer.whyUs')}</h3>
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li className="flex items-center justify-center gap-3">
                                 <Gem className="w-5 h-5 text-gold" />
-                                <span>فضة إسترليني أصلية 925</span>
+                                <span>{t('footer.sterlingSilver')}</span>
                             </li>
                             <li className="flex items-center justify-center gap-3">
                                 <Package className="w-5 h-5 text-gold" />
-                                <span>تغليف هدايا فاخر مجاناً</span>
+                                <span>{t('footer.freeGiftWrapping')}</span>
                             </li>
                             <li className="flex items-center justify-center gap-3">
                                 <ShieldCheck className="w-5 h-5 text-gold" />
-                                <span>ضمان على جميع القطع</span>
+                                <span>{t('footer.guarantee')}</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="border-t border-white/5 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 gap-4">
-                    <p>© Silver Bank. جميع الحقوق محفوظة.</p>
+                    <p>{t('footer.rightsReserved')}</p>
                     <div className="flex gap-4">
-                        <Link href="#" className="hover:text-white">سياسة الخصوصية</Link>
-                        <Link href="#" className="hover:text-white">الشروط والأحكام</Link>
+                        <Link href="#" className="hover:text-white">{t('footer.privacyPolicy')}</Link>
+                        <Link href="#" className="hover:text-white">{t('footer.termsConditions')}</Link>
                     </div>
                 </div>
             </div>

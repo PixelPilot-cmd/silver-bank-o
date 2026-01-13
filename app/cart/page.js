@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Trash2, ArrowRight, Gem, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 import OrderSearch from '@/components/OrderSearch';
 
@@ -17,6 +18,14 @@ export default function CartPage() {
     const [usePoints, setUsePoints] = useState(false);
     const [successOrder, setSuccessOrder] = useState(null);
     const router = useRouter();
+    const { t, language } = useLanguage();
+
+    const getLocalized = (obj, field) => {
+        if (!obj) return '';
+        if (language === 'en' && obj[field + '_en']) return obj[field + '_en'];
+        if (language === 'he' && obj[field + '_he']) return obj[field + '_he'];
+        return obj[field]; // Default to Arabic/base field
+    };
 
     const DISCOUNT_THRESHOLD = 1000;
     const DISCOUNT_VALUE = 50;
@@ -103,7 +112,7 @@ export default function CartPage() {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center p-8 text-center text-gray-500 font-light">
-            جاري تحضير سلتك الخاصة...
+            {t('cart.loading')}
         </div>
     );
 
@@ -117,14 +126,14 @@ export default function CartPage() {
                     </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-white">تم استلام طلبك بنجاح!</h1>
+                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-white">{t('cart.successTitle')}</h1>
                 <p className="text-gray-400 mb-10 max-w-md mx-auto leading-relaxed">
-                    شكراً لثقتك بمتجر بنك الفضة. طلبك الآن قيد المراجعة وسنقوم بالبدء في تجهيزه فوراً.
+                    {t('cart.successDesc')}
                 </p>
 
                 <div className="bg-[#111] border border-white/10 rounded-[2.5rem] p-10 mb-12 w-full max-w-md relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16"></div>
-                    <p className="text-gray-500 text-xs uppercase tracking-[0.4em] mb-4 font-bold">رقم الطلب الخاص بك</p>
+                    <p className="text-gray-500 text-xs uppercase tracking-[0.4em] mb-4 font-bold">{t('cart.orderNumber')}</p>
                     <p className="text-6xl font-mono font-bold text-primary tracking-tighter shadow-primary/20 drop-shadow-2xl">
                         #{successOrder.orderNumber}
                     </p>
@@ -135,13 +144,13 @@ export default function CartPage() {
                         onClick={() => window.location.href = `/track/${successOrder.id}`}
                         className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95"
                     >
-                        تتبع حالة الطلب
+                        {t('cart.trackStatus')}
                     </button>
                     <Link
                         href="/"
                         className="w-full py-4 bg-white/5 text-white font-bold rounded-2xl hover:bg-white/10 transition-all text-sm uppercase tracking-widest"
                     >
-                        العودة للرئيسية
+                        {t('cart.backToHome')}
                     </Link>
                 </div>
             </div>
@@ -157,16 +166,16 @@ export default function CartPage() {
                             <span className="text-4xl filter grayscale opacity-40">🛍️</span>
                         </div>
                         <div className="space-y-2">
-                            <h2 className="text-3xl font-serif text-white tracking-wide">سلة التسوق فارغة</h2>
-                            <p className="text-gray-500 font-light text-sm tracking-wider">اختر وقتك بعناية، الفخامة لا تنتظر.</p>
+                            <h2 className="text-3xl font-serif text-white tracking-wide">{t('cart.emptyCart')}</h2>
+                            <p className="text-gray-500 font-light text-sm tracking-wider">{t('cart.emptyCartDesc')}</p>
                         </div>
                         <Link href="/shop" className="inline-block px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-primary hover:text-white transition-all shadow-xl hover:-translate-y-1">
-                            الذهاب إلى المتجر
+                            {t('cart.goToShop')}
                         </Link>
                     </div>
 
                     <div className="pt-12 border-t border-white/5">
-                        <p className="text-gray-400 text-sm mb-6 font-light">لديك طلب مسبق؟ تتبعه من هنا:</p>
+                        <p className="text-gray-400 text-sm mb-6 font-light">{t('cart.trackPreviousOrder')}</p>
                         <OrderSearch />
                     </div>
                 </div>
@@ -178,7 +187,7 @@ export default function CartPage() {
         <main className="min-h-screen container max-w-4xl mx-auto py-12 px-4">
             <h1 className="text-3xl font-serif font-bold mb-8 flex items-center gap-4 text-white">
                 <Link href="/" className="p-2 rounded-full hover:bg-white/10 transition-colors"><ArrowRight size={24} /></Link>
-                سلة المشتريات
+                {t('cart.title')}
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -187,15 +196,15 @@ export default function CartPage() {
                     {cart.map((item) => (
                         <div key={item.id} className="flex gap-6 bg-[#111] p-4 rounded-2xl border border-white/5 hover:border-white/10 transition-all">
                             <div className="w-24 h-24 bg-[#0a0a0a] rounded-xl overflow-hidden shadow-inner shrink-0">
-                                <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-90" />
+                                <img src={item.image} alt={getLocalized(item, 'name')} className="w-full h-full object-cover opacity-90" />
                             </div>
                             <div className="flex-1 flex flex-col justify-between py-1">
                                 <div>
-                                    <h3 className="font-serif text-lg text-white tracking-wide mb-1">{item.name}</h3>
+                                    <h3 className="font-serif text-lg text-white tracking-wide mb-1">{getLocalized(item, 'name')}</h3>
                                     <p className="text-xl font-light text-primary">{item.price} ₪</p>
                                 </div>
                                 <div className="flex justify-between items-end">
-                                    <span className="text-sm text-gray-500 font-light bg-white/5 px-3 py-1 rounded-full border border-white/5">الكمية: {item.quantity}</span>
+                                    <span className="text-sm text-gray-500 font-light bg-white/5 px-3 py-1 rounded-full border border-white/5">{t('cart.quantity')}: {item.quantity}</span>
                                     <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-400 hover:bg-red-400/10 p-2 rounded-full transition-all">
                                         <Trash2 size={18} />
                                     </button>
@@ -210,19 +219,19 @@ export default function CartPage() {
                     <div className="bg-[#111] p-6 rounded-3xl border border-white/10 sticky top-4 shadow-2xl">
                         <div className="space-y-4 mb-6 pb-6 border-b border-white/5 font-serif">
                             <div className="flex justify-between text-base">
-                                <span className="text-gray-500">المجموع الفرعي:</span>
+                                <span className="text-gray-500">{t('cart.subtotal')}:</span>
                                 <span className="text-white">{subtotal} ₪</span>
                             </div>
 
                             {discount > 0 && (
                                 <div className="flex justify-between text-base text-primary">
-                                    <span>خصم النقاط:</span>
+                                    <span>{t('cart.discountPoints')}:</span>
                                     <span>-{discount} ₪</span>
                                 </div>
                             )}
 
                             <div className="flex justify-between text-xl pt-2">
-                                <span className="text-gray-400">الإجمالي:</span>
+                                <span className="text-gray-400">{t('cart.total')}:</span>
                                 <span className="text-white font-bold">{total} ₪</span>
                             </div>
                         </div>
@@ -236,8 +245,8 @@ export default function CartPage() {
                                             <Gem size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-white font-bold">لديك {user.points} نقطة</p>
-                                            <p className="text-[10px] text-gray-500">استبدل 1000 نقطة بخصم 50 ₪</p>
+                                            <p className="text-xs text-white font-bold">{t('cart.havePoints').replace('{points}', user.points)}</p>
+                                            <p className="text-[10px] text-gray-500">{t('cart.redeemPoints')}</p>
                                         </div>
                                     </div>
                                     <button
@@ -245,7 +254,7 @@ export default function CartPage() {
                                         onClick={() => setUsePoints(!usePoints)}
                                         className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${usePoints ? 'bg-primary text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20'}`}
                                     >
-                                        {usePoints ? 'تم التفعيل' : 'تفعيل الخصم'}
+                                        {usePoints ? t('cart.activated') : t('cart.activateDiscount')}
                                     </button>
                                 </div>
                             </div>
@@ -253,23 +262,23 @@ export default function CartPage() {
 
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div className="space-y-1">
-                                <label className="text-xs text-gray-500 uppercase tracking-widest">الاسم الكامل</label>
+                                <label className="text-xs text-gray-500 uppercase tracking-widest">{t('cart.fullName')}</label>
                                 <input
                                     type="text"
                                     required
                                     className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-white/30 outline-none transition-all placeholder:text-gray-700 font-light"
-                                    placeholder="الاسم الثلاثي"
+                                    placeholder={t('cart.namePlaceholder')}
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-xs text-gray-500 uppercase tracking-widest">رقم الهاتف</label>
+                                <label className="text-xs text-gray-500 uppercase tracking-widest">{t('cart.phone')}</label>
                                 <input
                                     type="tel"
                                     required
                                     className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-white/30 outline-none transition-all placeholder:text-gray-700 font-light"
-                                    placeholder="059xxxxxxx"
+                                    placeholder={t('cart.phonePlaceholder')}
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                 />
@@ -280,11 +289,11 @@ export default function CartPage() {
                                 disabled={submitting}
                                 className="w-full py-4 bg-white text-black font-bold text-lg rounded-xl hover:bg-gray-200 transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                             >
-                                {submitting ? 'جاري المعالجة...' : 'تأكيد الطلب'}
+                                {submitting ? t('cart.processing') : t('cart.confirmOrder')}
                             </button>
 
                             <p className="text-center text-[10px] text-gray-600 mt-4 leading-relaxed">
-                                بضغطك على تأكيد الطلب، أنت توافق على سياسة الخصوصية والشروط الخاصة بمتجر بنك الفضة.
+                                {t('cart.terms')}
                             </p>
                         </form>
                     </div>
@@ -292,7 +301,7 @@ export default function CartPage() {
             </div>
 
             <div className="mt-20 pt-10 border-t border-white/5 max-w-lg mx-auto">
-                <p className="text-center text-gray-500 text-sm mb-6 font-light">هل لديك طلب قيد التنفيذ؟</p>
+                <p className="text-center text-gray-500 text-sm mb-6 font-light">{t('cart.trackInProgress')}</p>
                 <OrderSearch />
             </div>
         </main>

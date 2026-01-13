@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import { Sparkles, Send, Clock, BadgeCheck, Camera, PenTool, Gem } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function CustomDesignPage() {
     const [loading, setLoading] = useState(false);
@@ -11,6 +12,7 @@ export default function CustomDesignPage() {
     const [imageFile, setImageFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const router = useRouter();
+    const { t } = useLanguage();
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -79,9 +81,9 @@ export default function CustomDesignPage() {
                     </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">تم استلام طلبك الملكي</h1>
+                <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">{t('custom.successTitle')}</h1>
                 <p className="text-gray-400 max-w-md mx-auto leading-relaxed mb-12">
-                    سيقوم خبراؤنا بدراسة طلبك وتحديد التكلفة المناسبة. ستتلقى إشعاراً فور تسعير القطعة من خلال ملفك الشخصي.
+                    {t('custom.successDesc')}
                 </p>
 
                 <div className="flex flex-col gap-4 w-full max-w-xs">
@@ -89,13 +91,13 @@ export default function CustomDesignPage() {
                         href="/profile"
                         className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
                     >
-                        متابعة الطلب في البروفايل
+                        {t('custom.trackInProfile')}
                     </Link>
                     <Link
                         href="/"
                         className="w-full py-4 text-gray-500 hover:text-white transition-all text-sm font-bold uppercase tracking-[0.3em]"
                     >
-                        العودة للرئيسية
+                        {t('custom.backToHome')}
                     </Link>
                 </div>
             </main>
@@ -112,13 +114,13 @@ export default function CustomDesignPage() {
                     <div className="text-center mb-16 space-y-4">
                         <div className="flex items-center justify-center gap-2 text-primary text-xs uppercase tracking-[0.5em] font-bold mb-2">
                             <Sparkles size={16} />
-                            <span>Unique Masterpieces</span>
+                            <span>{t('custom.subtitle')}</span>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight">
-                            صمم قطعة <br /> <span className="title-gradient">بصمتك الخاصة</span>
+                            {t('custom.title')}
                         </h1>
                         <p className="text-gray-500 text-lg max-w-xl mx-auto">
-                            حوّل خيالك إلى حقيقة ملموسة من الفضة الخالصة. أخبرنا عن فكرتك، وسنتولى صياغتها بأعلى معايير الفخامة.
+                            {t('custom.desc')}
                         </p>
                     </div>
 
@@ -127,18 +129,18 @@ export default function CustomDesignPage() {
                         <div className="space-y-8 lg:mt-12">
                             <ProcessStep
                                 icon={<PenTool size={20} />}
-                                title="1. صف فكرتك"
-                                desc="اكتب تفاصيل القطعة التي ترغب بها، سواء كانت خاتماً، قلادة، أو طقماً كاملاً."
+                                title={t('custom.step1Title')}
+                                desc={t('custom.step1Desc')}
                             />
                             <ProcessStep
                                 icon={<Clock size={20} />}
-                                title="2. التسعير الاحترافي"
-                                desc="سيقوم خبراؤنا بتقدير الجهد والمواد وتقديم سعر عادل خلال ساعات."
+                                title={t('custom.step2Title')}
+                                desc={t('custom.step2Desc')}
                             />
                             <ProcessStep
                                 icon={<Gem size={20} />}
-                                title="3. الصياغة اليدوية"
-                                desc="بمجرد موافقتك على السعر، يبدأ حرفيونا بالعمل على قطعتك الفريدة."
+                                title={t('custom.step3Title')}
+                                desc={t('custom.step3Desc')}
                             />
                         </div>
 
@@ -147,20 +149,20 @@ export default function CustomDesignPage() {
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">الاسم الكامل</label>
+                                        <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">{t('custom.fullName')}</label>
                                         <input
                                             name="customerName"
                                             required
-                                            placeholder="أدخل اسمك"
+                                            placeholder={t('custom.namePlaceholder')}
                                             className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary outline-none text-white transition-all shadow-inner"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">رقم التواصل</label>
+                                        <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">{t('custom.phoneNumber')}</label>
                                         <input
                                             name="customerPhone"
                                             required
-                                            placeholder="رقم الواتساب الخاص بك"
+                                            placeholder={t('custom.phonePlaceholder')}
                                             className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary outline-none text-white transition-all shadow-inner"
                                             dir="ltr"
                                         />
@@ -168,24 +170,24 @@ export default function CustomDesignPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">وصف التصميم</label>
+                                    <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">{t('custom.designDesc')}</label>
                                     <textarea
                                         name="description"
                                         required
                                         rows={5}
-                                        placeholder="مثال: أريد خاتم فضة عيار 925 مرصعاً بحجر عقيق يماني أحمر، مع حفر اسم 'عمر' من الداخل بخط ديواني..."
+                                        placeholder={t('custom.designDescPlaceholder')}
                                         className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary outline-none text-white transition-all shadow-inner resize-none"
                                     ></textarea>
                                 </div>
 
                                 {/* Optional Image Upload */}
                                 <div className="space-y-2">
-                                    <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">صورة توضيحية (اختياري)</label>
+                                    <label className="text-xs uppercase tracking-widest text-gray-500 mr-2">{t('custom.uploadImage')}</label>
                                     <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-white/10 rounded-[1.5rem] cursor-pointer hover:border-primary/40 transition-all bg-black/20 group overflow-hidden">
                                         {!preview ? (
                                             <>
                                                 <Camera className="text-gray-500 mb-2 group-hover:text-primary transition-colors" size={32} />
-                                                <span className="text-gray-500 text-sm">ارفع صورة أو اسكتش لفكرتك</span>
+                                                <span className="text-gray-500 text-sm">{t('custom.uploadPlaceholder')}</span>
                                             </>
                                         ) : (
                                             <img src={preview} alt="Preview" className="w-full h-full object-cover" />
@@ -203,7 +205,7 @@ export default function CustomDesignPage() {
                                         <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                     ) : (
                                         <>
-                                            ارسال طلب التفصيل
+                                            {t('custom.submit')}
                                             <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform rotate-[inherit]" />
                                         </>
                                     )}

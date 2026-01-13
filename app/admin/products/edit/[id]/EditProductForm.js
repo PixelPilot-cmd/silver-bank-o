@@ -69,9 +69,13 @@ export default function EditProductForm({ product }) {
             const formData = new FormData(e.target);
             const data = {
                 name: formData.get('name'),
+                name_en: formData.get('name_en'),
+                name_he: formData.get('name_he'),
                 price: Number(formData.get('price')),
                 category: formData.get('category'),
                 description: formData.get('description'),
+                description_en: formData.get('description_en'),
+                description_he: formData.get('description_he'),
                 images: finalImageUrls,
                 image: finalImageUrls[0] // Main image
             };
@@ -100,15 +104,40 @@ export default function EditProductForm({ product }) {
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="bg-secondary/50 backdrop-blur-md p-8 rounded-3xl border border-white/10 space-y-6 shadow-2xl">
 
-                <div>
-                    <label className="block text-sm text-gray-400 mb-2 mr-2">اسم المنتج</label>
-                    <input
-                        name="name"
-                        defaultValue={product.name}
-                        required
-                        className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white"
-                        placeholder="مثال: خاتم فضة عيار 925"
-                    />
+                {/* Multilingual Names */}
+                <div className="space-y-4 border-b border-white/5 pb-6">
+                    <h3 className="text-white font-bold mb-4">اسم المنتج (Product Name)</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-2 mr-2">العربية (Arabic)</label>
+                            <input
+                                name="name"
+                                defaultValue={product.name}
+                                required
+                                className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white text-right"
+                                placeholder="مثال: خاتم فضة عيار 925"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-2 mr-2">English</label>
+                            <input
+                                name="name_en"
+                                defaultValue={product.name_en}
+                                className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white text-left"
+                                placeholder="e.g. Silver Ring"
+                                dir="ltr"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-2 mr-2">עברית (Hebrew)</label>
+                            <input
+                                name="name_he"
+                                defaultValue={product.name_he}
+                                className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white text-right"
+                                placeholder="לדוגמה: טבעת כסף"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -190,15 +219,43 @@ export default function EditProductForm({ product }) {
                     </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm text-gray-400 mb-2 mr-2">الوصف</label>
-                    <textarea
-                        name="description"
-                        defaultValue={product.description}
-                        rows={4}
-                        className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white resize-none"
-                        placeholder="اكتب وصفاً جذاباً للمنتج..."
-                    ></textarea>
+                {/* Multilingual Descriptions */}
+                <div className="space-y-4 border-t border-white/5 pt-6">
+                    <h3 className="text-white font-bold mb-4">وصف المنتج (Description)</h3>
+
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-2 mr-2">الوصف (Arabic)</label>
+                        <textarea
+                            name="description"
+                            defaultValue={product.description}
+                            rows={3}
+                            className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white resize-none text-right"
+                            placeholder="اكتب وصفاً جذاباً للمنتج..."
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-2 mr-2">Description (English)</label>
+                        <textarea
+                            name="description_en"
+                            defaultValue={product.description_en}
+                            rows={3}
+                            className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white resize-none text-left"
+                            placeholder="Write a catchy description..."
+                            dir="ltr"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-2 mr-2">תיאור (Hebrew)</label>
+                        <textarea
+                            name="description_he"
+                            defaultValue={product.description_he}
+                            rows={3}
+                            className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white resize-none text-right"
+                            placeholder="כתוב תיאור קליט למוצר..."
+                        ></textarea>
+                    </div>
                 </div>
 
             </div>

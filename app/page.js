@@ -1,11 +1,23 @@
+'use client';
+
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import Header from '@/components/Header';
 import LuxuryClock from '@/components/LuxuryClock';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const dynamic = 'force-dynamic';
 
 export default function Home() {
+    const { t } = useLanguage();
+
+    const categories = [
+        { name: t('categories.watches'), icon: '⌚', id: 'watches' },
+        { name: t('categories.rings'), icon: '💍', id: 'rings' },
+        { name: t('categories.women_sets'), icon: '💎', id: 'women_sets' },
+        { name: t('categories.accessories'), icon: '🕶️', id: 'accessories' }
+    ];
+
     return (
         <main className="min-h-screen pb-20 overflow-x-hidden">
             <Header />
@@ -15,8 +27,8 @@ export default function Home() {
                 <div className="relative z-20 flex flex-col items-center max-w-4xl w-full">
                     <LuxuryClock />
                     <div className="text-center mt-12 animate-fade-in transition-all duration-1000">
-                        <h1 className="text-6xl md:text-9xl font-black mb-6 title-gradient tracking-tighter drop-shadow-2xl">Silver Bank 3</h1>
-                        <p className="text-gray-400 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mb-2">Luxury . Time . Elegance</p>
+                        <h1 className="text-6xl md:text-9xl font-black mb-6 title-gradient tracking-tighter drop-shadow-2xl">{t('siteName')}</h1>
+                        <p className="text-gray-400 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mb-2">{t('subtitle')}</p>
                     </div>
                 </div>
             </section>
@@ -24,12 +36,7 @@ export default function Home() {
             {/* Premium Categories Grid */}
             <div className="w-full px-6 mb-24 max-w-[1400px] mx-auto">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 perspective-1000">
-                    {[
-                        { name: 'ساعات فاخرة', icon: '⌚', id: 'watches' },
-                        { name: 'خواتم فضة', icon: '💍', id: 'rings' },
-                        { name: 'أطقم نسائية', icon: '💎', id: 'women_sets' },
-                        { name: 'اكسسوارات', icon: '🕶️', id: 'accessories' }
-                    ].map((cat, i) => (
+                    {categories.map((cat, i) => (
                         <Link
                             key={cat.id}
                             href={`/shop?category=${cat.id}`}
@@ -58,7 +65,7 @@ export default function Home() {
                     href="/shop"
                     className="inline-flex items-center gap-4 px-12 py-5 bg-white text-black font-black text-lg rounded-full hover:bg-primary hover:text-white transition-all duration-700 group shadow-[0_25px_60px_rgba(255,255,255,0.1)] hover:shadow-[0_25px_80px_rgba(215,0,0,0.4)]"
                 >
-                    <span>دخول المعرض الكامل</span>
+                    <span>{t('enterGallery')}</span>
                     <ShoppingBag size={24} className="group-hover:translate-x-1 group-hover:-rotate-12 transition-transform" />
                 </Link>
             </div>
