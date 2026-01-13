@@ -41,6 +41,11 @@ export function LanguageProvider({ children }) {
             value = value?.[k];
         }
 
+        // SAFETY CHECK: If the value is an object, don't return it as a React child
+        if (value && typeof value === 'object') {
+            return key; // Return the key name instead of the object to prevent crash
+        }
+
         return value || key;
     };
 
