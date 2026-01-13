@@ -98,29 +98,28 @@ export default function CustomDesignPage() {
 
     if (submitted) {
         return (
-            <main className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-700">
-                <div className="relative mb-8">
-                    <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                    <div className="relative w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 shadow-[0_0_50px_rgba(215,0,0,0.3)]">
-                        <BadgeCheck size={48} className="text-primary animate-in zoom-in duration-500 delay-300" />
+            <main className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center">
+                <div className="mb-8">
+                    <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 mx-auto shadow-[0_0_50px_rgba(215,0,0,0.3)]">
+                        <BadgeCheck size={48} className="text-primary" />
                     </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">تم استلام طلبك الملكي</h1>
+                <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">تم استلام طلبك بنجاح</h1>
                 <p className="text-gray-400 max-w-md mx-auto leading-relaxed mb-12">
-                    تم إرسال طلبك بنجاح. يرجى المتابعة حصراً من خلال صفحة &quot;حسابي&quot;. سيقوم المشرف بتسعير طلبك، وبعدها يجب عليك الموافقة على السعر ليبدأ التنفيذ.
+                    شكراً لثقتك بنا. تم إرسال طلبك للمراجعة. يمكنك متابعة حالة الطلب والسعر من خلال صفحة حسابك الشخصي.
                 </p>
 
-                <div className="flex flex-col gap-4 w-full max-w-xs">
+                <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
                     <Link
                         href="/profile"
-                        className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full py-5 bg-white text-black font-bold rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
                     >
-                        الذهاب إلى حسابي لمتابعة الطلب
+                        الذهاب إلى حسابي
                     </Link>
                     <Link
                         href="/"
-                        className="w-full py-4 text-gray-500 hover:text-white transition-all text-sm font-bold uppercase tracking-[0.3em]"
+                        className="w-full py-4 text-gray-500 hover:text-white transition-all text-sm font-bold uppercase tracking-widest"
                     >
                         العودة للرئيسية
                     </Link>
