@@ -27,47 +27,70 @@ export default function CustomDesignPage() {
         e.preventDefault();
         setLoading(true);
 
-        const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
-        const userId = savedUser?.id;
-
-        const formData = new FormData(e.target);
-        const description = formData.get('description');
-        const customerName = formData.get('customerName');
-        const customerPhone = formData.get('customerPhone');
-
         try {
+            const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
+            const userId = savedUser?.id || null;
+
+            const formData = new FormData(e.target);
+            const description = formData.get('description');
+            const customerName = formData.get('customerName');
+            const customerPhone = formData.get('customerPhone');
+
+            // Validate required fields
+            if (!description || !customerName || !customerPhone) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                setLoading(false);
+                return;
+            }
+
             let imageUrl = null;
             if (imageFile) {
-                const imgData = new FormData();
-                imgData.append('file', imageFile);
-                const uploadRes = await fetch('/api/upload', { method: 'POST', body: imgData });
-                if (uploadRes.ok) {
-                    const { url } = await uploadRes.json();
-                    imageUrl = url;
+                try {
+                    const imgData = new FormData();
+                    imgData.append('file', imageFile);
+                    const uploadRes = await fetch('/api/upload', { method: 'POST', body: imgData });
+                    if (uploadRes.ok) {
+                        const uploadResult = await uploadRes.json();
+                        imageUrl = uploadResult.url;
+                    } else {
+                        console.error('Image upload failed:', await uploadRes.text());
+                        // Continue without image if upload fails
+                    }
+                } catch (uploadErr) {
+                    console.error('Image upload error:', uploadErr);
+                    // Continue without image if upload fails
                 }
             }
+
+            const requestBody = {
+                description: description.trim(),
+                customerName: customerName.trim(),
+                customerPhone: customerPhone.trim(),
+                userId: userId,
+                image: imageUrl,
+                status: 'pending'
+            };
+
+            console.log('Sending custom request:', requestBody);
 
             const res = await fetch('/api/custom-requests', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    description,
-                    customerName,
-                    customerPhone,
-                    userId,
-                    image: imageUrl,
-                    status: 'pending'
-                })
+                body: JSON.stringify(requestBody)
             });
 
             if (res.ok) {
+                const result = await res.json();
+                console.log('Custom request created:', result);
                 setSubmitted(true);
             } else {
-                alert('حدث خطأ أثناء إرسال الطلب');
+                const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+                console.error('Server error:', errorData);
+                alert('حدث خطأ أثناء إرسال الطلب: ' + (errorData.error || 'خطأ غير معروف'));
             }
         } catch (err) {
-            console.error(err);
-            alert('حدث خطأ أثناء إرسال الطلب');
+            console.error('Submit error:', err);
+            alert('حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة مرة أخرى.');
         } finally {
             setLoading(false);
         }
