@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, ShoppingBag, ShieldCheck, Truck, Gem, Sparkles } from 'lucide-react';
 import Header from '@/components/Header';
 import AddToCartButton from './AddToCartButton';
+import ProductGallery from '@/components/ProductGallery';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,22 +27,11 @@ export default async function ProductPage({ params }) {
             <div className="container mx-auto px-4 pt-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-                    {/* Cinematic Image Gallery (Single Image for now) */}
-                    <div className="relative group perspective-1000">
-                        <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl transition-all duration-700 group-hover:border-white/20">
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                            />
-                            {/* Glass Reflection Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none"></div>
-                        </div>
-
-                        {/* Floating Decoration */}
-                        <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 blur-[60px] rounded-full animate-pulse-slow"></div>
-                        <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/5 blur-[80px] rounded-full"></div>
-                    </div>
+                    {/* Cinematic Image Gallery */}
+                    <ProductGallery
+                        images={product.images || (product.image ? [product.image] : [])}
+                        name={product.name}
+                    />
 
                     {/* Product Details Content */}
                     <div className="flex flex-col animate-in fade-in slide-in-from-right duration-700">

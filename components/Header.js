@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, User, LogOut, Store, Truck, Gem, Lock } from 'lucide-react';
+import { Search, ShoppingBag, User, LogOut, Store, Truck, Gem, Lock, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import NotificationBell from './NotificationBell';
 
 export default function Header() {
     const [user, setUser] = useState(null);
@@ -86,6 +85,16 @@ export default function Header() {
                     </div>
                 </form>
 
+                {/* Main Navigation (Desktop) */}
+                <nav className="hidden md:flex items-center gap-8">
+                    <Link href="/shop" className="text-gray-400 hover:text-white transition-colors text-sm font-medium tracking-widest uppercase">المتجر</Link>
+                    <Link href="/custom-design" className="text-primary hover:text-white transition-colors text-sm font-bold tracking-widest uppercase flex items-center gap-1">
+                        <Sparkles size={14} />
+                        طلب خاص
+                    </Link>
+                    <Link href="/track" className="text-gray-400 hover:text-white transition-colors text-sm font-medium tracking-widest uppercase">تتبع الطلب</Link>
+                </nav>
+
                 {/* Actions */}
                 <div className="flex items-center gap-1 sm:gap-3">
                     {user ? (
@@ -123,8 +132,6 @@ export default function Header() {
                         <Store size={22} />
                     </Link>
 
-                    {/* Notification/Notifications */}
-                    <NotificationBell />
 
                     {/* Tracking Link */}
                     <Link href="/track" className="p-2 hover:bg-white/10 rounded-full transition-colors" title="تتبع الطلب">

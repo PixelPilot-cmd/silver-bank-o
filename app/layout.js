@@ -8,7 +8,6 @@ export const metadata = {
 import Footer from '@/components/Footer';
 import CustomCursor from '@/components/CustomCursor';
 import Preloader from '@/components/Preloader';
-import OrderNotifications from '@/components/OrderNotifications';
 import BackgroundMarquee from '@/components/BackgroundMarquee';
 
 export default function RootLayout({ children }) {
@@ -24,11 +23,13 @@ export default function RootLayout({ children }) {
             <body className="cursor-none relative overflow-x-hidden bg-black text-white">
                 <Preloader />
                 <CustomCursor />
-                <OrderNotifications />
+
 
                 <BackgroundMarquee />
 
-                {children}
+                <main className="relative z-10 min-h-screen">
+                    {children}
+                </main>
 
                 <Footer />
             </body>

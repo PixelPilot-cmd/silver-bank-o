@@ -316,16 +316,18 @@ a {
 
 .marquee-text {
     position: fixed;
-    bottom: 5vh;
+    bottom: 10vh;
     left: 0;
     width: 200%;
     white-space: nowrap;
     pointer-events: none;
-    z-index: -1;
-    opacity: 0.03;
-    font-size: 15vh;
+    z-index: 1;
+    /* Changed to positive to be visible above radial bg but below content */
+    opacity: 0.06;
+    font-size: 18vh;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.05em;
     color: white;
+    filter: blur(2px);
 }

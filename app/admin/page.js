@@ -1,6 +1,6 @@
 import { getOrders } from '@/lib/db';
 import Link from 'next/link'; // Import Link
-import { Package, Plus, LogOut } from 'lucide-react'; // Import icons
+import { Package, Plus, LogOut, Sparkles } from 'lucide-react'; // Import icons
 import AdminOrderCard from './AdminOrderCard';
 import LogoutButton from './LogoutButton';
 
@@ -19,6 +19,10 @@ export default async function AdminDashboard() {
                     <Link href="/admin/products" className="flex items-center gap-2 text-primary hover:text-white transition-colors text-sm font-bold bg-white/5 px-4 py-2 rounded-xl border border-white/5">
                         <Plus size={16} />
                         إدارة المنتجات
+                    </Link>
+                    <Link href="/admin/custom-orders" className="flex items-center gap-2 text-blue-500 hover:text-white transition-colors text-sm font-bold bg-white/5 px-4 py-2 rounded-xl border border-white/5">
+                        <Sparkles size={16} />
+                        طلبات التفصيل
                     </Link>
                 </div>
                 <LogoutButton />

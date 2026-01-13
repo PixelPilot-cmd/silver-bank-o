@@ -1,31 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Upload, X, Image as ImageIcon } from 'lucide-react';
+import { ArrowRight, Upload, X, Image as ImageIcon, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function AddProductPage() {
     const [loading, setLoading] = useState(false);
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [images, setImages] = useState([]); // Array of { file, preview }
     const router = useRouter();
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+        const files = Array.from(e.target.files);
+        if (files.length + images.length > 5) {
+            alert('يمكنك رفع 5 صور كحد أقصى للمنتج الواحد');
+            return;
         }
+
+        const newImages = files.map(file => ({
+            file,
+            preview: URL.createObjectURL(file)
+        }));
+
+        setImages(prev => [...prev, ...newImages]);
     };
 
-    const removeImage = () => {
-        setImageFile(null);
-        setImagePreview(null);
+    const removeImage = (index) => {
+        setImages(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (e) => {
@@ -33,12 +34,12 @@ export default function AddProductPage() {
         setLoading(true);
 
         try {
-            let imageUrl = "https://placehold.co/400x400/1a1a1a/dadada?text=No+Image";
+            let imageUrls = [];
 
-            // Upload image if selected
-            if (imageFile) {
+            // Upload all selected images
+            for (const img of images) {
                 const imageFormData = new FormData();
-                imageFormData.append('file', imageFile);
+                imageFormData.append('file', img.file);
 
                 const uploadRes = await fetch('/api/upload', {
                     method: 'POST',
@@ -47,8 +48,13 @@ export default function AddProductPage() {
 
                 if (uploadRes.ok) {
                     const { url } = await uploadRes.json();
-                    imageUrl = url;
+                    imageUrls.push(url);
                 }
+            }
+
+            // If no images uploaded, use placeholder
+            if (imageUrls.length === 0) {
+                imageUrls.push("https://placehold.co/400x400/1a1a1a/dadada?text=No+Image");
             }
 
             const formData = new FormData(e.target);
@@ -57,7 +63,8 @@ export default function AddProductPage() {
                 price: Number(formData.get('price')),
                 category: formData.get('category'),
                 description: formData.get('description'),
-                image: imageUrl
+                images: imageUrls, // Now sending an array
+                image: imageUrls[0] // Backward compatibility
             };
 
             await fetch('/api/products', {
@@ -90,17 +97,17 @@ export default function AddProductPage() {
 
                     <div>
                         <label className="block text-sm text-gray-400 mb-2">اسم المنتج</label>
-                        <input name="name" required className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none" placeholder="مثال: خاتم فضة عيار 925" />
+                        <input name="name" required className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none text-white" placeholder="مثال: خاتم فضة عيار 925" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm text-gray-400 mb-2">السعر (شيكل)</label>
-                            <input name="price" type="number" required className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none" placeholder="0" />
+                            <input name="price" type="number" required className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none text-white" placeholder="0" />
                         </div>
                         <div>
                             <label className="block text-sm text-gray-400 mb-2">القسم</label>
-                            <select name="category" className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none">
+                            <select name="category" className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none text-white">
                                 <option value="watches">ساعات فاخرة</option>
                                 <option value="rings">خواتم فضة</option>
                                 <option value="women_sets">أطقم نسائية</option>
@@ -109,47 +116,47 @@ export default function AddProductPage() {
                         </div>
                     </div>
 
-                    {/* Image Upload Section */}
+                    {/* Multiple Image Upload Section */}
                     <div>
-                        <label className="block text-sm text-gray-400 mb-2">صورة المنتج</label>
+                        <label className="block text-sm text-gray-400 mb-2">صور المنتج (حتى 5 صور)</label>
 
-                        {!imagePreview ? (
-                            <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-colors bg-black/50">
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-12 h-12 mb-3 text-gray-400" />
-                                    <p className="mb-2 text-sm text-gray-400">
-                                        <span className="font-semibold">اضغط لرفع صورة</span> أو اسحب الصورة هنا
-                                    </p>
-                                    <p className="text-xs text-gray-500">PNG, JPG, WEBP (MAX. 5MB)</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+                            {images.map((img, index) => (
+                                <div key={index} className="relative aspect-square rounded-xl border border-white/10 overflow-hidden group">
+                                    <img src={img.preview} alt="Preview" className="w-full h-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeImage(index)}
+                                        className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <X size={14} />
+                                    </button>
                                 </div>
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                />
-                            </label>
-                        ) : (
-                            <div className="relative w-full h-48 border border-white/10 rounded-xl overflow-hidden">
-                                <img
-                                    src={imagePreview}
-                                    alt="Preview"
-                                    className="w-full h-full object-cover"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={removeImage}
-                                    className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 rounded-full text-white transition-colors"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
+                            ))}
+
+                            {images.length < 5 && (
+                                <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-colors bg-black/50">
+                                    <Plus className="w-8 h-8 text-gray-400" />
+                                    <span className="text-[10px] text-gray-500 mt-1">إضافة صورة</span>
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={handleImageChange}
+                                    />
+                                </label>
+                            )}
+                        </div>
+
+                        {images.length === 0 && (
+                            <p className="text-xs text-center text-gray-500">يُرجى رفع صورة واحدة على الأقل للمنتج</p>
                         )}
                     </div>
 
                     <div>
                         <label className="block text-sm text-gray-400 mb-2">الوصف</label>
-                        <textarea name="description" rows={4} className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none" placeholder="اكتب وصفاً جذاباً للمنتج..."></textarea>
+                        <textarea name="description" rows={4} className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none text-white" placeholder="اكتب وصفاً جذاباً للمنتج..."></textarea>
                     </div>
 
                 </div>

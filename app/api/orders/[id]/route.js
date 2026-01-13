@@ -13,11 +13,20 @@ export async function PUT(request, { params }) {
         return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Logic for Loyalty Points: If status changed to 'delivered'
-    if (data.status === 'delivered' && orderBefore?.status !== 'delivered') {
+    // Logic for Loyalty Points: If status changed to 'delivered' or 'completed'
+    const isCompleted = data.status === 'delivered' || data.status === 'completed';
+    const wasNotCompleted = orderBefore?.status !== 'delivered' && orderBefore?.status !== 'completed';
+
+    if (isCompleted && wasNotCompleted) {
         const users = await getUsers();
-        // Link by email or phone (using email here as primary identifier)
-        const user = users.find(u => u.email === updatedOrder.customerEmail || u.phone === updatedOrder.customerPhone);
+        // Identify user by email or phone (user profiles use email/phone)
+        const customerIdentifier = updatedOrder.email || updatedOrder.customerEmail || updatedOrder.customerPhone || updatedOrder.phone;
+
+        const user = users.find(u =>
+            (u.email && u.email === customerIdentifier) ||
+            (u.phone && u.phone === customerIdentifier) ||
+            (u.id === updatedOrder.userId)
+        );
 
         if (user) {
             const currentPoints = user.points || 0;

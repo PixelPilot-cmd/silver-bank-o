@@ -2,29 +2,40 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Save, Upload, X } from 'lucide-react';
+import { Save, Upload, X, Plus } from 'lucide-react';
 
 export default function EditProductForm({ product }) {
     const [loading, setLoading] = useState(false);
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(product.image);
+
+    // Existing images (URLs)
+    const [existingImages, setExistingImages] = useState(product.images || (product.image ? [product.image] : []));
+
+    // New images to be uploaded
+    const [newImages, setNewImages] = useState([]); // Array of { file, preview }
+
     const router = useRouter();
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+    const handleNewImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length + existingImages.length + newImages.length > 5) {
+            alert('يمكنك رفع 5 صور كحد أقصى للمنتج الواحد');
+            return;
         }
+
+        const added = files.map(file => ({
+            file,
+            preview: URL.createObjectURL(file)
+        }));
+
+        setNewImages(prev => [...prev, ...added]);
     };
 
-    const removeImage = () => {
-        setImageFile(null);
-        setImagePreview(product.image);
+    const removeExistingImage = (index) => {
+        setExistingImages(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const removeNewImage = (index) => {
+        setNewImages(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (e) => {
@@ -32,12 +43,12 @@ export default function EditProductForm({ product }) {
         setLoading(true);
 
         try {
-            let imageUrl = product.image;
+            let finalImageUrls = [...existingImages];
 
-            // Upload new image if selected
-            if (imageFile) {
+            // Upload all new selected images
+            for (const img of newImages) {
                 const imageFormData = new FormData();
-                imageFormData.append('file', imageFile);
+                imageFormData.append('file', img.file);
 
                 const uploadRes = await fetch('/api/upload', {
                     method: 'POST',
@@ -46,8 +57,13 @@ export default function EditProductForm({ product }) {
 
                 if (uploadRes.ok) {
                     const { url } = await uploadRes.json();
-                    imageUrl = url;
+                    finalImageUrls.push(url);
                 }
+            }
+
+            // If no images at all, add a placeholder
+            if (finalImageUrls.length === 0) {
+                finalImageUrls.push("https://placehold.co/400x400/1a1a1a/dadada?text=No+Image");
             }
 
             const formData = new FormData(e.target);
@@ -56,7 +72,8 @@ export default function EditProductForm({ product }) {
                 price: Number(formData.get('price')),
                 category: formData.get('category'),
                 description: formData.get('description'),
-                image: imageUrl
+                images: finalImageUrls,
+                image: finalImageUrls[0] // Main image
             };
 
             const res = await fetch(`/api/products/${product.id}`, {
@@ -121,37 +138,55 @@ export default function EditProductForm({ product }) {
                     </div>
                 </div>
 
-                {/* Image Upload/Change Section */}
+                {/* Multiple Image Management Section */}
                 <div>
-                    <label className="block text-sm text-gray-400 mb-2 mr-2">صورة المنتج</label>
+                    <label className="block text-sm text-gray-400 mb-2 mr-2">صور المنتج (حتى 5 صور)</label>
 
-                    <div className="relative w-full h-48 border border-white/10 rounded-xl overflow-hidden bg-black/50">
-                        <img
-                            src={imagePreview}
-                            alt="Product"
-                            className="w-full h-full object-cover"
-                        />
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {/* Existing Images */}
+                        {existingImages.map((url, index) => (
+                            <div key={`existing-${index}`} className="relative aspect-square rounded-xl border border-white/10 overflow-hidden group">
+                                <img src={url} alt="Product" className="w-full h-full object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={() => removeExistingImage(index)}
+                                    className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <X size={14} />
+                                </button>
+                                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-[8px] text-center p-0.5 text-gray-400 italic">مرفوعة مسبقاً</div>
+                            </div>
+                        ))}
 
-                        {imageFile && (
-                            <button
-                                type="button"
-                                onClick={removeImage}
-                                className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 rounded-full text-white transition-colors z-10"
-                            >
-                                <X size={20} />
-                            </button>
+                        {/* New Images */}
+                        {newImages.map((img, index) => (
+                            <div key={`new-${index}`} className="relative aspect-square rounded-xl border border-primary/30 overflow-hidden group">
+                                <img src={img.preview} alt="New" className="w-full h-full object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={() => removeNewImage(index)}
+                                    className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <X size={14} />
+                                </button>
+                                <div className="absolute bottom-0 left-0 right-0 bg-primary/80 text-[8px] text-center p-0.5 text-black font-bold">جديدة</div>
+                            </div>
+                        ))}
+
+                        {/* Add More Button */}
+                        {existingImages.length + newImages.length < 5 && (
+                            <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary/50 transition-colors bg-black/50">
+                                <Plus className="w-8 h-8 text-gray-400" />
+                                <span className="text-[10px] text-gray-500 mt-1">إضافة صورة</span>
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleNewImageChange}
+                                />
+                            </label>
                         )}
-
-                        <label className="absolute bottom-2 left-2 right-2 flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-black font-bold rounded-lg cursor-pointer transition-colors">
-                            <Upload size={18} />
-                            <span>تغيير الصورة</span>
-                            <input
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                            />
-                        </label>
                     </div>
                 </div>
 
