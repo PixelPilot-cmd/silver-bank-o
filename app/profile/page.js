@@ -10,6 +10,7 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [customRequests, setCustomRequests] = useState([]);
     const [approvingId, setApprovingId] = useState(null);
+    const [successOrder, setSuccessOrder] = useState(null);
 
     useEffect(() => {
         const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
@@ -45,8 +46,7 @@ export default function ProfilePage() {
 
             if (res.ok) {
                 const result = await res.json();
-                alert(`تم تأمين طلبك رقم #${result.order.orderNumber}. يمكنك الآن تتبعه!`);
-                window.location.href = `/track/${result.order.id}`;
+                setSuccessOrder(result.order);
             }
         } catch (err) {
             console.error(err);
@@ -60,6 +60,47 @@ export default function ProfilePage() {
             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         </div>
     );
+
+    if (successOrder) {
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-700">
+                <div className="relative mb-8">
+                    <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                    <div className="relative w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)]">
+                        <Check size={48} className="text-primary animate-in zoom-in duration-500 delay-300" />
+                    </div>
+                </div>
+
+                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-white">عظيم! بدأنا العمل</h1>
+                <p className="text-gray-400 mb-10 max-w-md mx-auto leading-relaxed">
+                    تم تحويل طلبك الخاص بنجاح إلى طلب قيد التنفيذ. سيبدأ حرفيونا العمل على قطعتك الفريدة فوراً.
+                </p>
+
+                <div className="bg-[#111] border border-white/10 rounded-[2.5rem] p-10 mb-12 w-full max-w-md relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16"></div>
+                    <p className="text-gray-500 text-xs uppercase tracking-[0.4em] mb-4 font-bold">رقم الطلب الملكي</p>
+                    <p className="text-6xl font-mono font-bold text-white tracking-tighter shadow-primary/20 drop-shadow-2xl">
+                        #{successOrder.orderNumber}
+                    </p>
+                </div>
+
+                <div className="flex flex-col gap-4 w-full max-w-xs">
+                    <button
+                        onClick={() => window.location.href = `/track/${successOrder.id}`}
+                        className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95"
+                    >
+                        تتبع التحفة الفنية
+                    </button>
+                    <button
+                        onClick={() => setSuccessOrder(null)}
+                        className="w-full py-4 text-gray-500 hover:text-white transition-all text-sm font-bold uppercase tracking-widest"
+                    >
+                        العودة للملف الشخصي
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (!user) {
         return (
@@ -82,7 +123,7 @@ export default function ProfilePage() {
         <main className="min-h-screen bg-[#050505] pb-20">
             <Header />
 
-            <div className="container mx-auto px-4 pt-32">
+            <div className="container mx-auto px-4 pt-20 md:pt-32">
                 <div className="max-w-4xl mx-auto">
 
                     {/* Header Section */}
@@ -168,7 +209,7 @@ export default function ProfilePage() {
                                 {customRequests.map((req) => (
                                     <div key={req.id} className="bg-[#111] border border-white/10 rounded-3xl p-6 flex flex-col md:flex-row gap-6 hover:bg-[#151515] transition-colors group">
                                         {req.image && (
-                                            <div className="w-24 h-24 bg-black rounded-xl overflow-hidden shrink-0 border border-white/5 group-hover:border-primary/30 transition-colors">
+                                            <div className="w-full md:w-32 h-40 md:h-32 bg-black rounded-2xl overflow-hidden shrink-0 border border-white/5 group-hover:border-primary/30 transition-colors">
                                                 <img src={req.image} alt="Custom" className="w-full h-full object-cover" />
                                             </div>
                                         )}
@@ -184,24 +225,27 @@ export default function ProfilePage() {
                                                 </span>
                                                 <span className="text-[10px] text-gray-600 font-mono">{new Date(req.createdAt).toLocaleDateString('ar-EG')}</span>
                                             </div>
-                                            <p className="text-gray-300 text-sm mb-4 line-clamp-2 font-light">{req.description}</p>
+                                            <p className="text-gray-300 text-sm mb-4 font-light whitespace-pre-wrap leading-relaxed bg-white/5 p-4 rounded-2xl border border-white/5">
+                                                <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">تفاصيل طلبك:</span>
+                                                {req.description}
+                                            </p>
 
                                             {req.status === 'priced' && (
-                                                <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-auto">
+                                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-white/5 pt-4 mt-auto">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest">السعر المقترح</span>
-                                                        <span className="text-2xl font-black text-white">{req.price} ₪</span>
+                                                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">السعر المقترح</span>
+                                                        <span className="text-3xl font-black text-primary">{req.price} ₪</span>
                                                     </div>
                                                     <button
                                                         onClick={() => handleApprove(req.id)}
                                                         disabled={approvingId === req.id}
-                                                        className="bg-white text-black px-6 py-3 rounded-xl text-sm font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg active:scale-95"
+                                                        className="w-full sm:w-auto bg-white text-black px-8 py-4 rounded-2xl text-sm font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl active:scale-95"
                                                     >
                                                         {approvingId === req.id ? (
-                                                            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                                                            <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
                                                         ) : (
                                                             <>
-                                                                <Check size={16} />
+                                                                <Check size={18} />
                                                                 موافقة وتأكيد الطلب
                                                             </>
                                                         )}
