@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-import { User, Gem, ShoppingBag, Package, Star, ArrowLeft, Sparkles, Check } from 'lucide-react';
+import { User, Gem, ShoppingBag, Package, Star, ArrowLeft, Sparkles, Check, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ProfilePage() {
