@@ -34,6 +34,6 @@ export async function POST(request) {
         createdAt: new Date().toISOString(),
         ...data
     };
-    await saveOrder(newOrder);
-    return NextResponse.json(newOrder);
+    const savedOrder = await saveOrder(newOrder);
+    return NextResponse.json(savedOrder);
 }

@@ -58,9 +58,14 @@ export default function AdminOrderCard({ order }) {
         <div className="bg-secondary-light border border-white/5 rounded-xl p-4 hover:border-white/10 transition-colors group">
             <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
-                    <span className="font-mono text-xs text-primary font-bold block mb-1">REQ #{order.orderNumber || '---'}</span>
-                    <h3 className="font-bold text-white leading-tight">{order.customer?.name}</h3>
-                    <a href={`tel:${order.customer?.phone}`} className="text-xs text-gray-500 hover:text-white transition-colors">{order.customer?.phone}</a>
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="bg-primary/10 text-primary px-3 py-1 rounded-full font-mono text-sm font-bold border border-primary/20">
+                            #{order.orderNumber || '---'}
+                        </span>
+                        <span className="text-[10px] text-gray-600 uppercase tracking-widest">ID: {order.id.slice(0, 8)}</span>
+                    </div>
+                    <h3 className="font-bold text-lg text-white leading-tight">{order.customer?.name}</h3>
+                    <a href={`tel:${order.customer?.phone}`} className="text-sm text-gray-500 hover:text-white transition-colors">{order.customer?.phone}</a>
                 </div>
                 <div className="flex flex-col items-end gap-2">
                     <div className={`px-2 py-1 rounded text-[10px] font-bold border ${getStatusColor(status)}`}>

@@ -24,6 +24,9 @@ export default function CustomDesignPage() {
         e.preventDefault();
         setLoading(true);
 
+        const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
+        const userId = savedUser?.id;
+
         const formData = new FormData(e.target);
         const description = formData.get('description');
         const customerName = formData.get('customerName');
@@ -48,6 +51,7 @@ export default function CustomDesignPage() {
                     description,
                     customerName,
                     customerPhone,
+                    userId,
                     image: imageUrl,
                     status: 'pending'
                 })

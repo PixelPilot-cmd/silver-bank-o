@@ -2,26 +2,58 @@
 
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-import { User, Gem, ShoppingBag, Package, Star, ArrowLeft } from 'lucide-react';
+import { User, Gem, ShoppingBag, Package, Star, ArrowLeft, Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ProfilePage() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [customRequests, setCustomRequests] = useState([]);
+    const [approvingId, setApprovingId] = useState(null);
 
     useEffect(() => {
         const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
         if (savedUser) {
+            // Fetch Profile
             fetch(`/api/auth/me?id=${savedUser.id}`)
                 .then(res => res.json())
                 .then(data => {
                     if (!data.error) setUser(data);
+                });
+
+            // Fetch Custom Requests
+            fetch('/api/custom-requests')
+                .then(res => res.json())
+                .then(data => {
+                    const myRequests = data.filter(r => r.userId === savedUser.id);
+                    setCustomRequests(myRequests);
                     setLoading(false);
                 });
         } else {
             setLoading(false);
         }
     }, []);
+
+    const handleApprove = async (requestId) => {
+        if (!confirm('هل أنت متأكد من الموافقة على السعر والبدء في تنفيذ الطلب؟')) return;
+
+        setApprovingId(requestId);
+        try {
+            const res = await fetch(`/api/custom-requests/${requestId}/approve`, {
+                method: 'POST'
+            });
+
+            if (res.ok) {
+                const result = await res.json();
+                alert(`تم تأمين طلبك رقم #${result.order.orderNumber}. يمكنك الآن تتبعه!`);
+                window.location.href = `/track/${result.order.id}`;
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setApprovingId(null);
+        }
+    };
 
     if (loading) return (
         <div className="min-h-screen bg-black flex items-center justify-center">
@@ -124,6 +156,64 @@ export default function ProfilePage() {
                             ></div>
                         </div>
                     </div>
+
+                    {/* Custom Requests Section */}
+                    {customRequests.length > 0 && (
+                        <div className="mb-12 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
+                            <h2 className="text-2xl font-serif text-white mb-6 flex items-center gap-3">
+                                <Sparkles size={24} className="text-primary" />
+                                طلبات التفصيل الخاصة
+                            </h2>
+                            <div className="space-y-4">
+                                {customRequests.map((req) => (
+                                    <div key={req.id} className="bg-[#111] border border-white/10 rounded-3xl p-6 flex flex-col md:flex-row gap-6 hover:bg-[#151515] transition-colors group">
+                                        {req.image && (
+                                            <div className="w-24 h-24 bg-black rounded-xl overflow-hidden shrink-0 border border-white/5 group-hover:border-primary/30 transition-colors">
+                                                <img src={req.image} alt="Custom" className="w-full h-full object-cover" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${req.status === 'priced' ? 'bg-blue-500/20 text-blue-400' :
+                                                    req.status === 'approved' ? 'bg-green-500/20 text-green-400' :
+                                                        'bg-white/5 text-gray-500'
+                                                    }`}>
+                                                    {req.status === 'pending' ? 'بانتظار التسعير' :
+                                                        req.status === 'priced' ? 'تم التسعير' :
+                                                            req.status === 'approved' ? 'تمت الموافقة' : req.status}
+                                                </span>
+                                                <span className="text-[10px] text-gray-600 font-mono">{new Date(req.createdAt).toLocaleDateString('ar-EG')}</span>
+                                            </div>
+                                            <p className="text-gray-300 text-sm mb-4 line-clamp-2 font-light">{req.description}</p>
+
+                                            {req.status === 'priced' && (
+                                                <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-auto">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest">السعر المقترح</span>
+                                                        <span className="text-2xl font-black text-white">{req.price} ₪</span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleApprove(req.id)}
+                                                        disabled={approvingId === req.id}
+                                                        className="bg-white text-black px-6 py-3 rounded-xl text-sm font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg active:scale-95"
+                                                    >
+                                                        {approvingId === req.id ? (
+                                                            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                                                        ) : (
+                                                            <>
+                                                                <Check size={16} />
+                                                                موافقة وتأكيد الطلب
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Quick Links */}
                     <div className="flex flex-wrap justify-center gap-4">

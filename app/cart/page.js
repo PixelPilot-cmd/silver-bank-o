@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Trash2, ArrowRight, Gem } from 'lucide-react';
+import { Trash2, ArrowRight, Gem, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import OrderSearch from '@/components/OrderSearch';
@@ -15,6 +15,7 @@ export default function CartPage() {
     const [phone, setPhone] = useState('');
     const [user, setUser] = useState(null);
     const [usePoints, setUsePoints] = useState(false);
+    const [successOrder, setSuccessOrder] = useState(null);
     const router = useRouter();
 
     const DISCOUNT_THRESHOLD = 1000;
@@ -90,7 +91,8 @@ export default function CartPage() {
                 }
 
                 clearCart();
-                router.push(`/track/${order.id}`);
+                setSuccessOrder(order);
+                // The screen will show the success message
             }
         } catch (err) {
             console.error(err);
@@ -104,6 +106,40 @@ export default function CartPage() {
             جاري تحضير سلتك الخاصة...
         </div>
     );
+
+    if (successOrder) {
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700">
+                <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-8 border border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+                    <Check size={48} className="text-green-500" />
+                </div>
+                <h1 className="text-4xl font-serif font-bold mb-4 text-white">تم استلام طلبك بنجاح!</h1>
+                <p className="text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+                    شكراً لثقتك بمتجر بنك الفضة. طلبك الآن قيد المراجعة وسنقوم بالبدء في تجهيزه فوراً.
+                </p>
+
+                <div className="bg-[#111] border border-white/10 rounded-2xl p-8 mb-10 w-full max-w-sm">
+                    <p className="text-gray-500 text-xs uppercase tracking-widest mb-2">رقم الطلب الخاص بك</p>
+                    <p className="text-5xl font-mono font-bold text-primary tracking-tighter">#{successOrder.orderNumber}</p>
+                </div>
+
+                <div className="flex flex-col gap-4 w-full max-w-xs">
+                    <button
+                        onClick={() => window.location.href = `/track/${successOrder.id}`}
+                        className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-all shadow-lg active:scale-95"
+                    >
+                        تتبع حالة الطلب
+                    </button>
+                    <Link
+                        href="/"
+                        className="w-full py-4 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition-all"
+                    >
+                        العودة للرئيسية
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     if (cart.length === 0) {
         return (
