@@ -86,9 +86,9 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-white">عظيم! بدأنا العمل</h1>
+                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-white">تمت الموافقة بنجاح</h1>
                 <p className="text-gray-400 mb-10 max-w-md mx-auto leading-relaxed">
-                    تم تحويل طلبك الخاص بنجاح إلى طلب قيد التنفيذ. سيبدأ حرفيونا العمل على قطعتك الفريدة فوراً.
+                    تم تحويل طلبك الخاص إلى طلب رسمي.
                 </p>
 
                 <div className="bg-[#111] border border-white/10 rounded-[2.5rem] p-10 mb-12 w-full max-w-md relative overflow-hidden group">
@@ -100,6 +100,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex flex-col gap-4 w-full max-w-xs">
+                    <p className="text-gray-400 text-sm mb-4">يرجى مراجعة الاوردر من خلال تتبع الطلبات باستخدام رقم الاوردر</p>
                     <button
                         onClick={() => window.location.href = `/track/${successOrder.id}`}
                         className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-primary hover:text-white transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95"
@@ -237,8 +238,8 @@ export default function ProfilePage() {
                                                 req.status === 'approved' ? 'bg-green-500/80 text-white' :
                                                     'bg-white/10 text-gray-400'
                                                 }`}>
-                                                {req.status === 'pending' ? 'بانتظار التسعير' :
-                                                    req.status === 'priced' ? 'تم التسعير' :
+                                                {req.status === 'pending' ? 'يرجى انتظار تسعير الأدمن' :
+                                                    req.status === 'priced' ? 'بانتظار موافقتك' :
                                                         req.status === 'approved' ? 'تمت الموافقة' : req.status}
                                             </span>
                                         </div>
@@ -255,8 +256,8 @@ export default function ProfilePage() {
                                                     req.status === 'approved' ? 'bg-green-500/20 text-green-400' :
                                                         'bg-white/5 text-gray-500'
                                                     }`}>
-                                                    {req.status === 'pending' ? 'بانتظار التسعير' :
-                                                        req.status === 'priced' ? 'تم التسعير' :
+                                                    {req.status === 'pending' ? 'يرجى انتظار تسعير الأدمن' :
+                                                        req.status === 'priced' ? 'بانتظار موافقتك' :
                                                             req.status === 'approved' ? 'تمت الموافقة' : req.status}
                                                 </span>
                                                 <span className="text-[10px] text-gray-600 font-mono flex items-center gap-1">
