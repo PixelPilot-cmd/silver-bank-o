@@ -9,12 +9,20 @@ export async function GET() {
 }
 
 export async function POST(request) {
-    const data = await request.json();
+    try {
+        const data = await request.json();
 
-    if (!data.description || !data.customerName) {
-        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        if (!data.description || !data.customerName) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        const newRequest = await addCustomRequest(data);
+        return NextResponse.json(newRequest);
+    } catch (error) {
+        console.error('Error in custom-requests POST:', error);
+        return NextResponse.json({
+            error: 'Failed to create custom request',
+            details: error.message
+        }, { status: 500 });
     }
-
-    const newRequest = await addCustomRequest(data);
-    return NextResponse.json(newRequest);
 }
