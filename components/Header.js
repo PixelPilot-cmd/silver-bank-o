@@ -127,13 +127,17 @@ export default function Header() {
                         <Lock size={18} className="sm:w-5" />
                     </Link>
 
+                    {/* Mobile/All View: Custom Design Link */}
+                    <Link href="/custom-design" className="p-2 text-primary hover:scale-110 transition-transform" title="طلب خاص">
+                        <Sparkles size={22} />
+                    </Link>
+
                     {/* Desktop/Tablet Store Link */}
-                    <Link href="/shop" className="hidden sm:flex p-2 hover:bg-white/10 rounded-full transition-colors" title="المعرض">
+                    <Link href="/shop" className="p-2 hover:bg-white/10 rounded-full transition-colors" title="المتجر">
                         <Store size={22} />
                     </Link>
 
-
-                    {/* Tracking Link */}
+                    {/* Tracking Link (Mostly for mobile ease) */}
                     <Link href="/track" className="p-2 hover:bg-white/10 rounded-full transition-colors" title="تتبع الطلب">
                         <Truck size={22} />
                     </Link>

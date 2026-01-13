@@ -114,6 +114,16 @@ a {
     border-radius: 4px;
 }
 
+/* Scrollbar Removal Utility */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 /* Utilities */
 .container {
     max-width: 1200px;
