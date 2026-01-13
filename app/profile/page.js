@@ -14,33 +14,38 @@ export default function ProfilePage() {
 
     useEffect(() => {
         const savedUser = JSON.parse(localStorage.getItem('customer_user') || 'null');
-        if (savedUser) {
-            // Fetch Profile
-            fetch(`/api/auth/me?id=${savedUser.id}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.error) setUser(data);
-                });
-
-            // Fetch Custom Requests with cache disabling
-            fetch('/api/custom-requests', { cache: 'no-store' })
-                .then(res => res.json())
-                .then(data => {
-                    // Filter by userId OR phone number to ensure it appears on all devices
-                    const myRequests = data.filter(r =>
-                        (r.userId && r.userId === savedUser.id) ||
-                        (r.customerPhone && (r.customerPhone === savedUser.phone || r.customerPhone === user?.phone))
-                    );
-                    setCustomRequests(myRequests);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error('Error fetching requests:', err);
-                    setLoading(false);
-                });
-        } else {
+        if (!savedUser) {
             setLoading(false);
+            return;
         }
+
+        // 1. Fetch Profile First
+        fetch(`/api/auth/me?id=${savedUser.id}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(userData => {
+                if (!userData.error) {
+                    setUser(userData);
+                }
+
+                // 2. Fetch Requests AFTER Profile (or with savedUser fallback)
+                return fetch('/api/custom-requests', { cache: 'no-store' })
+                    .then(res => res.json())
+                    .then(requestsData => {
+                        const userPhone = userData?.phone || savedUser.phone;
+
+                        const myRequests = requestsData.filter(r =>
+                            (r.userId && r.userId === savedUser.id) ||
+                            (r.customerPhone && userPhone && r.customerPhone === userPhone)
+                        );
+
+                        setCustomRequests(myRequests);
+                        setLoading(false);
+                    });
+            })
+            .catch(err => {
+                console.error('Error loading profile data:', err);
+                setLoading(false);
+            });
     }, []);
 
     const handleApprove = async (requestId) => {

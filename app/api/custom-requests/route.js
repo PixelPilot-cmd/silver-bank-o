@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCustomRequests, addCustomRequest } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     const requests = await getCustomRequests();
     return NextResponse.json(requests);

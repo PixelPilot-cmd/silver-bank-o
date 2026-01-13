@@ -112,7 +112,7 @@ export default function CartPage() {
             <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-700">
                 <div className="relative mb-8">
                     <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                    <div className="relative w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)]">
+                    <div className="relative w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 shadow-[0_0_50px_rgba(215,0,0,0.3)]">
                         <Check size={48} className="text-primary animate-in zoom-in duration-500 delay-300" />
                     </div>
                 </div>
