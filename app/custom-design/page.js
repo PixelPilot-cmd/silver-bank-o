@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Header from '@/components/Header';
-import { Sparkles, Send, Clock, BadgeCheck, Camera, PenTool, Gem } from 'lucide-react';
+import { Sparkles, Send, Clock, Camera, PenTool, Gem } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -36,7 +35,6 @@ export default function CustomDesignPage() {
             const customerName = formData.get('customerName');
             const customerPhone = formData.get('customerPhone');
 
-            // Validate required fields
             if (!description || !customerName || !customerPhone) {
                 alert('الرجاء ملء جميع الحقول المطلوبة');
                 setLoading(false);
@@ -52,13 +50,9 @@ export default function CustomDesignPage() {
                     if (uploadRes.ok) {
                         const uploadResult = await uploadRes.json();
                         imageUrl = uploadResult.url;
-                    } else {
-                        console.error('Image upload failed:', await uploadRes.text());
-                        // Continue without image if upload fails
                     }
                 } catch (uploadErr) {
                     console.error('Image upload error:', uploadErr);
-                    // Continue without image if upload fails
                 }
             }
 
@@ -71,8 +65,6 @@ export default function CustomDesignPage() {
                 status: 'pending'
             };
 
-            console.log('Sending custom request:', requestBody);
-
             const res = await fetch('/api/custom-requests', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -80,12 +72,9 @@ export default function CustomDesignPage() {
             });
 
             if (res.ok) {
-                const result = await res.json();
-                console.log('Custom request created:', result);
                 setSubmitted(true);
             } else {
                 const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
-                console.error('Server error:', errorData);
                 alert('حدث خطأ أثناء إرسال الطلب: ' + (errorData.error || 'خطأ غير معروف'));
             }
         } catch (err) {
@@ -106,20 +95,20 @@ export default function CustomDesignPage() {
                 </div>
 
                 <h1 className="text-3xl font-bold text-white mb-4">تم إرسال طلبك بنجاح</h1>
-                <p className="text-gray-400 max-w-sm mx-auto mb-10">
+                <p className="text-gray-400 max-w-sm mx-auto mb-10 text-lg">
                     شكراً لك. تم استلام طلب التفصيل الخاص بك. يمكنك متابعة حالة الطلب من صفحة حسابك الشخصي.
                 </p>
 
                 <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
                     <button
                         onClick={() => router.push('/profile')}
-                        className="w-full py-4 bg-white text-black font-bold rounded-xl active:scale-95 transition-transform"
+                        className="w-full py-5 bg-white text-black font-bold rounded-2xl active:scale-95 transition-all shadow-lg text-lg"
                     >
                         الذهاب إلى حسابي
                     </button>
                     <button
                         onClick={() => router.push('/')}
-                        className="w-full py-3 text-gray-500 text-sm hover:text-white"
+                        className="w-full py-4 text-gray-400 hover:text-white transition-all text-sm font-bold uppercase tracking-widest"
                     >
                         العودة للرئيسية
                     </button>
@@ -223,10 +212,10 @@ export default function CustomDesignPage() {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full btn btn-primary py-6 text-xl flex items-center justify-center gap-4 group"
+                                    className="w-full bg-white text-black py-6 text-xl rounded-2xl font-bold flex items-center justify-center gap-4 group hover:bg-primary hover:text-white transition-all shadow-xl"
                                 >
                                     {loading ? (
-                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <div className="w-6 h-6 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
                                     ) : (
                                         <>
                                             ارسال طلب التفصيل
