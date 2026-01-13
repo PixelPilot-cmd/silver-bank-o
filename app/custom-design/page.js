@@ -100,27 +100,21 @@ export default function CustomDesignPage() {
         return (
             <main className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center">
                 <div className="mb-8">
-                    <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30 mx-auto shadow-[0_0_50px_rgba(215,0,0,0.3)]">
-                        <BadgeCheck size={48} className="text-primary" />
+                    <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto">
+                        <Sparkles size={40} className="text-white" />
                     </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">تم استلام طلبك بنجاح</h1>
-                <p className="text-gray-400 max-w-md mx-auto leading-relaxed mb-12">
-                    شكراً لثقتك بنا. تم إرسال طلبك للمراجعة. يمكنك متابعة حالة الطلب والسعر من خلال صفحة حسابك الشخصي.
+                <h1 className="text-3xl font-bold text-white mb-4">تم إرسال طلبك</h1>
+                <p className="text-gray-400 max-w-sm mx-auto mb-10">
+                    شكراً لك. تم استلام طلب التفصيل الخاص بك بنجاح. يمكنك متابعة حالة الطلب من صفحة حسابك.
                 </p>
 
-                <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
-                    <Link
-                        href="/profile"
-                        className="w-full py-5 bg-white text-black font-bold rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
-                    >
+                <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
+                    <Link href="/profile" className="w-full py-4 bg-white text-black font-bold rounded-xl">
                         الذهاب إلى حسابي
                     </Link>
-                    <Link
-                        href="/"
-                        className="w-full py-4 text-gray-500 hover:text-white transition-all text-sm font-bold uppercase tracking-widest"
-                    >
+                    <Link href="/" className="w-full py-3 text-gray-500 text-sm">
                         العودة للرئيسية
                     </Link>
                 </div>
