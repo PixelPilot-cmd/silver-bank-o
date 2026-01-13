@@ -52,5 +52,15 @@ export function LanguageProvider({ children }) {
 }
 
 export function useLanguage() {
-    return useContext(LanguageContext);
+    const context = useContext(LanguageContext);
+    if (!context) {
+        // Fallback if context is not available
+        return {
+            language: 'ar',
+            setLanguage: () => { },
+            t: (key) => key,
+            isLoaded: true
+        };
+    }
+    return context;
 }

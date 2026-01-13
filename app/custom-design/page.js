@@ -13,7 +13,8 @@ export default function CustomDesignPage() {
     const [imageFile, setImageFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const router = useRouter();
-    const { t } = useLanguage();
+    const languageContext = useLanguage();
+    const t = languageContext?.t || ((key) => key);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
