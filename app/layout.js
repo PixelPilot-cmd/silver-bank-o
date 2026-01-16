@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 import Footer from '@/components/Footer';
-import CustomCursor from '@/components/CustomCursor';
+
 import Preloader from '@/components/Preloader';
 import BackgroundMarquee from '@/components/BackgroundMarquee';
 
@@ -21,10 +21,10 @@ export default function RootLayout({ children }) {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
             </head>
-            <body className="cursor-none relative overflow-x-hidden bg-black text-white">
+            <body className="relative overflow-x-hidden bg-black text-white">
                 <ClientProviders>
                     <Preloader />
-                    <CustomCursor />
+
 
                     <BackgroundMarquee />
 
