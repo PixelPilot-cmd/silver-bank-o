@@ -159,10 +159,11 @@ export default function EditProductForm({ product }) {
                             defaultValue={product.category}
                             className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white appearance-none"
                         >
-                            <option value="watches">ساعات فاخرة</option>
-                            <option value="rings">خواتم فضة</option>
-                            <option value="women_sets">أطقم نسائية</option>
-                            <option value="accessories">اكسسوارات</option>
+                            <option value="watches">قسم رجالي</option>
+                            <option value="women_sets">قسم قطع نسائية</option>
+                            <option value="rings">قسم قطع اطفال</option>
+                            <option value="rosaries">قسم قطع انتيك</option>
+                            <option value="accessories">قسم اكسسوارات</option>
                         </select>
                     </div>
                 </div>

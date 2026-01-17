@@ -126,10 +126,11 @@ export default function AddProductPage() {
                         <div>
                             <label className="block text-sm text-gray-400 mb-2">القسم</label>
                             <select name="category" className="w-full bg-black border border-white/10 rounded-xl p-3 focus:border-primary outline-none text-white">
-                                <option value="watches">ساعات فاخرة</option>
-                                <option value="rings">خواتم فضة</option>
-                                <option value="women_sets">أطقم نسائية</option>
-                                <option value="accessories">اكسسوارات</option>
+                                <option value="watches">قسم رجالي</option>
+                                <option value="women_sets">قسم قطع نسائية</option>
+                                <option value="rings">قسم قطع اطفال</option>
+                                <option value="rosaries">قسم قطع انتيك</option>
+                                <option value="accessories">قسم اكسسوارات</option>
                             </select>
                         </div>
                     </div>

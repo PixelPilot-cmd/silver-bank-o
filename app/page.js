@@ -13,8 +13,9 @@ export default function Home() {
 
     const categories = [
         { name: t('categories.watches'), icon: '⌚', id: 'watches' },
-        { name: t('categories.rings'), icon: '💍', id: 'rings' },
         { name: t('categories.women_sets'), icon: '💎', id: 'women_sets' },
+        { name: t('categories.rings'), icon: '🧸', id: 'rings' },
+        { name: t('categories.rosaries'), icon: '🏺', id: 'rosaries' },
         { name: t('categories.accessories'), icon: '🕶️', id: 'accessories' }
     ];
 

@@ -38,9 +38,9 @@ export default function ShopClient({ initialProducts }) {
 
     const categories = [
         { id: 'watches', name: t('categories.watches'), icon: Watch },
-        { id: 'rings', name: t('categories.rings'), icon: Circle },
         { id: 'women_sets', name: t('categories.women_sets'), icon: Gem },
-        { id: 'rosaries', name: t('categories.rosaries') || 'سبح ملكية', icon: Orbit },
+        { id: 'rings', name: t('categories.rings'), icon: Circle },
+        { id: 'rosaries', name: t('categories.rosaries'), icon: Orbit },
         { id: 'accessories', name: t('categories.accessories'), icon: Sparkles },
     ];
 
@@ -58,12 +58,12 @@ export default function ShopClient({ initialProducts }) {
                 <div className="flex flex-wrap justify-center gap-4 mb-16">
                     <Link
                         href="/shop"
-                        className={`group relative h-24 w-24 md:h-28 md:w-28 rounded-2xl border ${!activeCategory ? 'border-primary bg-primary/10' : 'border-white/10 bg-white/5'} backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-3 overflow-hidden shadow-lg hover:scale-105 hover:shadow-primary/20`}
+                        className={`group relative h-24 w-24 md:h-28 md:w-28 rounded-2xl border ${!activeCategory ? 'border-primary bg-primary/10' : 'border-white/10 bg-white/5'} backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden shadow-lg hover:scale-105 hover:shadow-primary/20`}
                     >
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 border ${!activeCategory ? 'bg-primary text-black border-primary' : 'bg-black/20 text-gray-400 border-white/5 group-hover:text-white'}`}>
                             <span className="text-xl font-bold">∞</span>
                         </div>
-                        <span className={`text-xs md:text-sm font-bold transition-colors ${!activeCategory ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{t('all')}</span>
+                        <span className={`text-[10px] md:text-xs font-bold transition-colors text-center leading-tight px-1 ${!activeCategory ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{t('all')}</span>
                     </Link>
 
                     {categories.map((cat) => {
@@ -74,12 +74,12 @@ export default function ShopClient({ initialProducts }) {
                             <Link
                                 key={cat.id}
                                 href={`/shop?category=${cat.id}`}
-                                className={`group relative h-24 w-24 md:h-28 md:w-28 rounded-2xl border ${isActive ? 'border-primary bg-primary/10' : 'border-white/10 bg-white/5'} backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-3 overflow-hidden shadow-lg hover:scale-105 hover:shadow-primary/20`}
+                                className={`group relative h-24 w-24 md:h-28 md:w-28 rounded-2xl border ${isActive ? 'border-primary bg-primary/10' : 'border-white/10 bg-white/5'} backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-2 overflow-hidden shadow-lg hover:scale-105 hover:shadow-primary/20`}
                             >
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 border ${isActive ? 'bg-primary text-black border-primary' : 'bg-black/20 text-gray-400 border-white/5 group-hover:text-white'}`}>
                                     <Icon size={20} strokeWidth={1.5} />
                                 </div>
-                                <span className={`text-xs md:text-sm font-bold transition-colors ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{cat.name}</span>
+                                <span className={`text-[10px] md:text-xs font-bold transition-colors text-center leading-tight px-1 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{cat.name}</span>
                             </Link>
                         );
                     })}

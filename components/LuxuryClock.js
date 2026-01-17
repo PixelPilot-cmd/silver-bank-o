@@ -129,9 +129,9 @@ function RealtimeHands({ initialTime }) {
                 <div className="absolute bottom-0 -translate-x-1/2 w-1.5 md:w-2 h-24 md:h-32 bg-gradient-to-t from-[#fff] to-[#d0d0d0] rounded-full shadow-2xl origin-bottom"></div>
             </div>
             {/* Second */}
-            <div className="absolute top-0 left-0 w-0 h-0 flex justify-center transition-transform duration-75 ease-out" style={style.s}>
-                <div className="absolute bottom-[-15px] -translate-x-1/2 w-0.5 md:w-0.5 h-30 md:h-40 bg-[#D70000] rounded-full shadow-[0_0_10px_rgba(215,0,0,0.5)] origin-bottom">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-3 md:h-4 bg-white rounded-full"></div>
+            <div className="absolute top-0 left-0 w-0 h-0 flex justify-center transition-transform duration-75 ease-out z-30" style={style.s}>
+                <div className="absolute bottom-[-15px] -translate-x-1/2 w-[2px] h-28 md:h-36 bg-[#D70000] rounded-full shadow-[0_0_15px_rgba(215,0,0,0.8)] origin-bottom">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 md:w-2.5 md:h-2.5 bg-[#D70000] rounded-full border border-white/30"></div>
                 </div>
             </div>
         </>
